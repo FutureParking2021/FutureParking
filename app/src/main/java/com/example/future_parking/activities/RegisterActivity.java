@@ -24,7 +24,6 @@ import java.util.Set;
 public class RegisterActivity extends AppCompatActivity {
 
     final Handler handler = new Handler(Looper.getMainLooper());
-    private String test;
     private EditText register_EDT_name;
     private EditText register_EDT_email;
     private EditText register_EDT_password;
