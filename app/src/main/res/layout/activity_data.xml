@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.DataActivity"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/data_LBL_titleData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="@string/change_your_data"
+        android:textColor="#031DB1"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="75dp"
+        />
+
+    <EditText
+        android:id="@+id/data_EDT_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="New name"
+        android:layout_above="@id/data_EDT_password"
+        />
+
+    <EditText
+        android:id="@+id/data_EDT_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="New password"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="35dp"
+        />
+
+    <EditText
+        android:id="@+id/data_EDT_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/data_EDT_password"
+        android:hint="New email"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="100dp"
+        />
+
+
+
+    <Button
+        android:id="@+id/data_BTN_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:textColor="#000000"
+        android:backgroundTint="@android:color/darker_gray"
+        android:layout_gravity="center_horizontal"
+
+        />
+</LinearLayout>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.SettingsActivity"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:id="@+id/settings_LBL_Userdata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/data"
+        android:textColor="@color/primary"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:id="@+id/settings_LAY_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:orientation="vertical"
+
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/user_data"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/settings_LBL_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:text="@string/change_your_personal_data"
+            android:textSize="15sp"
+            android:tag="data"
+            android:clickable="true"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/settings_LBL_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/screen"
+        android:textColor="@color/primary"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:id="@+id/settings_LAY_alwaysOn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="true"
+        >
+
+        <TextView
+            android:id="@+id/settings_LBL_screenUnderTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/keep_screen_on"
+            android:textStyle="bold" />
+
+
+        <Switch
+            android:id="@+id/settings_SWT_screenOn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:tag="alwaysOn"
+            android:text="@string/prevent_the_screen_to_go_off_when_the_start_button_is_pressed"
+            android:textSize="15sp"
+            />
+
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/settings_LBL_UnitsChange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/units"
+        android:textColor="@color/primary"
+        android:textSize="15sp"
+
+        />
+
+    <LinearLayout
+        android:id="@+id/settings_LAY_Units"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:orientation="vertical"
+
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/settings_LBL_unitsUnderTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/units"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/settings_LBL_units"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:text="@string/choose_unit_of_measure"
+            android:textSize="15sp"
+            android:clickable="true"
+            android:tag="units"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/settings_LBL_delayTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/countdown_timer"
+        android:textColor="@color/primary"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:id="@+id/settings_LAY_Timer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:orientation="vertical"
+
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/settings_LBL_timerUnderTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/countdown_timer_title"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/settings_LBL_timer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:text="@string/choose_the_delay_time"
+            android:textSize="15sp"
+            android:clickable="true"
+            android:tag="timer"
+
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/settings_LBL_Contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/contact_us"
+        android:textColor="@color/primary"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:id="@+id/settings_LAY_Owners"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/settings_LBL_contactUnderTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/contact_us"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/settings_LBL_owner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:text="@string/send_us_feedback_or_just_contact_us"
+            android:textSize="15sp"
+            android:clickable="true"
+            android:tag="owners"
+            />
+
+    </LinearLayout>
+</LinearLayout>

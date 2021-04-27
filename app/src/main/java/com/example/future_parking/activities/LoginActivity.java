@@ -38,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
                 .load(R.drawable.parking)
                 .centerCrop()
                 .into(login_IMG_background);
-
     }
 
 
@@ -99,9 +98,11 @@ public class LoginActivity extends AppCompatActivity {
 
 
         if (view.getTag().toString().equals("login")) {
-
+            Intent intent = new Intent(LoginActivity.this, StartUpActivity.class);
+            this.startActivity(intent);
+            finish();
         } else if ((view.getTag().toString().equals("register"))) {
-            Intent intent = new Intent(this, RegisterActivity.class);
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             this.startActivity(intent);
         }
 
