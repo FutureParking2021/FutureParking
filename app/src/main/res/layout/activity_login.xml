@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.LoginActivity">
+    <ImageView
+        android:id="@+id/login_IMG_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/parking"
+        android:scaleType="centerCrop"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FUTURE PARKING"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:textSize="45sp"
+        android:textColor="#FF0000"
+        android:textStyle="bold"
+        />
+
+
+    <EditText
+        android:id="@+id/login_EDT_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:textSize="30sp"
+        android:textColorHint="#FFFFFF"
+        android:maxLines="1"
+        />
+
+    <EditText
+        android:id="@+id/login_EDT_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/login_EDT_email"
+        android:layout_marginTop="25dp"
+        android:textSize="30sp"
+        android:textFontWeight="15"
+        android:inputType="textPassword"
+        android:digits="QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789"
+        android:textColorHint="#FFFFFF"
+        />
+
+    <TextView
+        android:id="@+id/login_LBL_errorMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_EDT_password"
+        android:layout_centerHorizontal="true"
+        android:text=""
+        android:textColor="#EE0000"
+
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_BTN_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:text="Login"
+        android:layout_below="@id/login_EDT_password"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="25dp"
+        android:tag="login"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_BTN_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:text="register"
+        android:layout_below="@id/login_BTN_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:tag="register"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot your password?"
+        android:clickable="true"
+        android:textColor="#3F51B5"
+        android:textSize="15sp"
+        android:layout_below="@id/login_BTN_register"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentBottom="true"
+        />
+
+    <ProgressBar
+        android:id="@+id/login_PGB_pgb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="85dp"></ProgressBar>
+</RelativeLayout>
