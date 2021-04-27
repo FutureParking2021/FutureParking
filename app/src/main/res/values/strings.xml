@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Future_Parking</string>
+    <string name="send_us_feedback_or_just_contact_us">feedback</string>
+    <string name="contact_us">contactUs</string>
+    <string name="screen">screen</string>
+    <string name="change_your_personal_data">data</string>
+    <string name="user_data">userData</string>
+    <string name="data">mainData</string>
+    <string name="keep_screen_on">screnOn</string>
+    <string name="prevent_the_screen_to_go_off_when_the_start_button_is_pressed">screenOff</string>
+    <string name="units">units</string>
+    <string name="choose_unit_of_measure">unitMeausre</string>
+    <string name="countdown_timer">timer</string>
+    <string name="countdown_timer_title">timerTitle</string>
+    <string name="choose_the_delay_time">delayTime</string>
+    <string name="change_your_data">changeData</string>
+    <string name="save">save</string>
 </resources>
