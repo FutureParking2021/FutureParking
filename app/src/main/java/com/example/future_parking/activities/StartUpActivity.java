@@ -98,8 +98,8 @@ public class StartUpActivity extends AppCompatActivity {
     }
 
     private void rideActivity() {
-//        Intent intent = new Intent(getApplicationContext(), MapActivity.class);
-//        StartUp.this.startActivity(intent);
+        Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+        StartUpActivity.this.startActivity(intent);
     }
 
     private void findViews(){
