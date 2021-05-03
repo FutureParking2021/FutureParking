@@ -19,7 +19,6 @@ public class DataActivity extends AppCompatActivity {
     private EditText data_EDT_email;
     private Button data_BTN_save;
     private Account account;
-    int n;
     String newName;
     String newEmail;
     String newPassword;
