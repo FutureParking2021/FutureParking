@@ -1,44 +1,91 @@
 package com.example.future_parking.classes;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class Account {
-
-    private String name;
-    private ArrayList carNumber;
+    @SerializedName("email")
     private String email;
-    private String password;
-    private String type;
+
+    @SerializedName("role")
+    private String role;
+
+    @SerializedName("username")
+    private String username;
+
+    @SerializedName("avatar")
+    private String avatar;
+
+    @SerializedName("Password")
+    private String Password;
+
+
 
     public Account() {
     }
 
-    public Account(String name, String email, String password, ArrayList carNumber, String type) {
-        this.name = name;
+    public Account(String email, String role, String username, String avatar, String password) {
         this.email = email;
-        this.password = password;
-        this.carNumber = new ArrayList();
-        this.type = type;
+        this.role = role;
+        this.username = username;
+        this.avatar = avatar;
+        Password = password;
     }
-
-
-    public String getName() {
-        return name;
-    }
-
 
     public String getEmail() {
         return email;
     }
 
+    public Account setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public Account setRole(String role) {
+        this.role = role;
+        return this;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public Account setUsername(String username) {
+        this.username = username;
+        return this;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public Account setAvatar(String avatar) {
+        this.avatar = avatar;
+        return this;
+    }
+
     public String getPassword() {
-        return password;
+        return Password;
     }
 
-    public ArrayList getCarNumber() {
-        return carNumber;
+    public Account setPassword(String password) {
+        Password = password;
+        return this;
     }
 
-    public String getType() {return type;}
-
+    @Override
+    public String toString() {
+        return "Account{" +
+                "email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                ", username='" + username + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", Password='" + Password + '\'' +
+                '}';
+    }
 }
