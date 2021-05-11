@@ -66,13 +66,5 @@
         android:tag="add"
         />
 
-    <TextView
-        android:id="@+id/NewParking_LBL_location"
-        android:layout_width = "match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:layout_below="@id/NewParking_BTN_add"
-        />
-
 
 </RelativeLayout>
