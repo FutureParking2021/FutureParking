@@ -93,8 +93,9 @@ public class StartUpActivity extends AppCompatActivity {
     }
 
     private void goalActivity() {
-//        Intent intent = new Intent(getApplicationContext(), GoalActivity.class);
-//        this.startActivity(intent);
+        Intent intent = new Intent(getApplicationContext(), NewParkingActivity.class);
+        intent.putExtra("EMAIL", "1@gmail.com");
+        this.startActivity(intent);
     }
 
     private void rideActivity() {
