@@ -17,20 +17,14 @@ public class Account {
     @SerializedName("avatar")
     private String avatar;
 
-    @SerializedName("Password")
-    private String Password;
-
-
-
     public Account() {
     }
 
-    public Account(String email, String role, String username, String avatar, String password) {
+    public Account(String email, String role, String username, String avatar) {
         this.email = email;
         this.role = role;
         this.username = username;
         this.avatar = avatar;
-        Password = password;
     }
 
     public String getEmail() {
@@ -69,14 +63,6 @@ public class Account {
         return this;
     }
 
-    public String getPassword() {
-        return Password;
-    }
-
-    public Account setPassword(String password) {
-        Password = password;
-        return this;
-    }
 
     @Override
     public String toString() {
@@ -85,7 +71,6 @@ public class Account {
                 ", role='" + role + '\'' +
                 ", username='" + username + '\'' +
                 ", avatar='" + avatar + '\'' +
-                ", Password='" + Password + '\'' +
                 '}';
     }
 }

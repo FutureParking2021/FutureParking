@@ -55,12 +55,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/register_EDT_password"
+            android:layout_marginBottom="8dp"
+            android:background="#DDD9E3"
+            >
+
+            <TextView android:id="@+id/register_LBL_role"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Password"/>
+                android:inputType="textCapWords"
+                android:hint="user role"
+                android:tag="role"
+                android:text="choose user role"
+                android:background="#DDD9E3"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Signup Button -->

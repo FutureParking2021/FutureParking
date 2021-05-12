@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Future_Parking"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.NewParkingActivity"></activity>
+        <activity android:name=".activities.UpdateItemActivity"></activity>
+        <activity android:name=".activities.NewParkingActivity" />
         <activity android:name=".activities.MapActivity" />
         <activity android:name=".activities.ItemActivity" />
         <activity android:name=".activities.StartUpActivity" />
@@ -35,6 +36,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
+        <meta-data android:value="AIzaSyBtpCR42KuS-R10e52uqAILezRZ7ixHQZA" android:name="com.google.android.geo.API_KEY"/>
     </application>
 
 </manifest>

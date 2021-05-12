@@ -2,6 +2,8 @@ package com.example.future_parking.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -21,11 +23,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.future_parking.R;
 import com.example.future_parking.classes.Account;
-import com.example.future_parking.classes.UserId;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONArray;
@@ -44,11 +44,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText register_EDT_name;
     private EditText register_EDT_email;
-    private EditText register_EDT_password;
+    private TextView register_LBL_role;
     private MaterialButton register_BTN_create;
     private TextView register_TXT_login;
     private ProgressBar register_PGB_pgb;
     private Account account;
+    private String role;
     private Set<Account> set=null;
     Map<String,Object> list = null;
     private String userID;
@@ -63,6 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
         findViews();
         register_PGB_pgb.setVisibility(View.GONE);
         register_BTN_create.setOnClickListener(createAccountClicked);
+        register_LBL_role.setOnClickListener(createAccountClicked);
     }
 
     private View.OnClickListener createAccountClicked = new View.OnClickListener() {
@@ -75,10 +77,26 @@ public class RegisterActivity extends AppCompatActivity {
     private void buttonClicked(View view) {
         if(view.getTag().toString().equals("register")){
             signup();
+        } else if(view.getTag().toString().equals("role")){
+            String[] units = {"PLAYER", "MANAGER","ADMIN"};
+            unitSelection(units);
         }
 
     }
 
+    private void unitSelection(String[] choose) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose an option");
+        builder.setItems(choose, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                role = choose[which];
+//                Log.d("role","role is " + name);
+                register_LBL_role.setText(role);
+            }
+        });
+        builder.show();
+    }
 
     boolean isEmail(EditText text) {
         CharSequence email = text.getText().toString();
@@ -89,9 +107,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         String name=register_EDT_name.getText().toString();
         String email= register_EDT_email.getText().toString();
-        String password= register_EDT_password.getText().toString();
-        String role = "MANAGER";
-        Account user = new Account(email,role,name,"J",password);
+//        String type = register_EDT_role.getText().toString();
+        Account user = new Account(email,role,name,"J");
         return  user;
     }
 
@@ -112,46 +129,46 @@ public class RegisterActivity extends AppCompatActivity {
 
 
             postRequest();
-            getRequest();
+//            getRequest();
             onSignupSuccess();
         }
     }
 
-    private void getRequest() {
-        RequestQueue requestQueue = Volley.newRequestQueue(RegisterActivity.this);
-        String url = "http://192.168.1.211:8080/twins/admin/users/2021b.twins/1@gmail.com";
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                JSONArray jsonArray = response;
-                Log.d("json",jsonArray.toString());
-                try {
-                    for(int i=0;i<jsonArray.length();i++)
-                    {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        JSONObject jsonUserId = jsonObject.getJSONObject("userId");
-                        String email = jsonUserId.getString("email");
-                        String role = jsonObject.getString("role");
-                        String username = jsonObject.getString("username");
-                        String avatar = jsonObject.getString("avatar");
-                        Account c = new Account(email,role,username,avatar,"asdsad");
-                        Log.d("stas5",c.toString());
-                        alist.add(c);
-                    }
-                }
-                catch (Exception w)
-                {
-                    Log.d("stas4", "exception" + w.getMessage());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("stas4", "exception");
-            }
-        });
-        requestQueue.add(jsonArrayRequest);
-    }
+//    private void getRequest() {
+//        RequestQueue requestQueue = Volley.newRequestQueue(RegisterActivity.this);
+//        String url = "http://192.168.1.211:8080/twins/admin/users/2021b.twins/1@gmail.com";
+//        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+//            @Override
+//            public void onResponse(JSONArray response) {
+//                JSONArray jsonArray = response;
+//                Log.d("json",jsonArray.toString());
+//                try {
+//                    for(int i=0;i<jsonArray.length();i++)
+//                    {
+//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                        JSONObject jsonUserId = jsonObject.getJSONObject("userId");
+//                        String email = jsonUserId.getString("email");
+//                        String role = jsonObject.getString("role");
+//                        String username = jsonObject.getString("username");
+//                        String avatar = jsonObject.getString("avatar");
+//                        Account c = new Account(email,role,username,avatar);
+//                        Log.d("stas5",c.toString());
+//                        alist.add(c);
+//                    }
+//                }
+//                catch (Exception w)
+//                {
+//                    Log.d("stas4", "exception" + w.getMessage());
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.d("stas4", "exception");
+//            }
+//        });
+//        requestQueue.add(jsonArrayRequest);
+//    }
 
 
 
@@ -221,7 +238,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         String name = register_EDT_name.getText().toString();
         String email = register_EDT_email.getText().toString();
-        String password = register_EDT_password.getText().toString();
+//        String type = register_EDT_type.getText().toString();
 
         if (name.isEmpty() || name.length() < 3) {
             register_EDT_name.setError("at least 3 characters");
@@ -237,12 +254,12 @@ public class RegisterActivity extends AppCompatActivity {
             register_EDT_email.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            register_EDT_password.setError("between 4 and 10 alphanumeric characters");
-            valid = false;
-        } else {
-            register_EDT_password.setError(null);
-        }
+//        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+//            register_EDT_type.setError("between 4 and 10 alphanumeric characters");
+//            valid = false;
+//        } else {
+//            register_EDT_type.setError(null);
+//        }
 
         return valid;
     }
@@ -250,7 +267,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void findViews() {
         register_EDT_name=findViewById(R.id.register_EDT_name);
         register_EDT_email=findViewById(R.id.register_EDT_email);
-        register_EDT_password= findViewById(R.id.register_EDT_password);
+        register_LBL_role = findViewById(R.id.register_LBL_role);
         register_BTN_create=findViewById(R.id.register_BTN_create);
         register_TXT_login =findViewById(R.id.register_TXT_login);
         register_PGB_pgb = findViewById(R.id.register_PGB_pgb);

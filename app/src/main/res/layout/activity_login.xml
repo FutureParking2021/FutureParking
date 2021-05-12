@@ -9,7 +9,6 @@
         android:id="@+id/login_IMG_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/parking"
         android:scaleType="centerCrop"
         />
 
@@ -33,8 +32,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="150dp"
         android:textSize="30sp"
-        android:textColorHint="#FFFFFF"
+        android:textColorHint="#000000"
         android:maxLines="1"
+
         />
 
     <EditText
