@@ -45,7 +45,7 @@ public class LocationService extends Service {
     private int lastShownNotificationId = -1;
     public static String CHANNEL_ID = "com.example.ridewithme.CHANNEL_ID_FOREGROUND";
     public static String MAIN_ACTION = "com.example.ridewithme.locationservice.action.main";
-
+    private int n;
     public static final String START_FOREGROUND_SERVICE = "START_FOREGROUND_SERVICE";
     public static final String PAUSE_FOREGROUND_SERVICE = "PAUSE_FOREGROUND_SERVICE";
     public static final String STOP_FOREGROUND_SERVICE = "STOP_FOREGROUND_SERVICE";
