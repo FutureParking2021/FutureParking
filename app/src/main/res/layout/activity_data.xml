@@ -26,14 +26,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="New name"
-        android:layout_above="@id/data_EDT_password"
         />
 
     <EditText
-        android:id="@+id/data_EDT_password"
+        android:id="@+id/data_EDT_avatar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="New password"
+        android:hint="New avatar"
         android:layout_centerInParent="true"
         android:layout_marginTop="50dp"
         android:layout_marginBottom="35dp"
@@ -43,13 +42,10 @@
         android:id="@+id/data_EDT_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/data_EDT_password"
         android:hint="New email"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="100dp"
         />
-
-
 
     <Button
         android:id="@+id/data_BTN_save"

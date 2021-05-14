@@ -13,12 +13,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.future_parking.R;
 import com.example.future_parking.classes.Account;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class StartUpActivity extends AppCompatActivity {
     private MaterialButton Start_BTN_logout;
     private String role;
     private String email;
+    private String username;
+    private String avatar;
     private ArrayList<Account> alist = new ArrayList<>();
     @Override
     protected void onPause() {
@@ -56,41 +60,38 @@ public class StartUpActivity extends AppCompatActivity {
         Start_BTN_logout.setOnClickListener(buttonClickListener);
         email = getIntent().getStringExtra("EMAIL");
         role = getIntent().getStringExtra("ROLE");
+        username = getIntent().getStringExtra("USERNAME");
+        avatar = getIntent().getStringExtra("USERNAME");
+
         getRequest();
     }
 
 
     private void getRequest() {
         RequestQueue requestQueue = Volley.newRequestQueue(StartUpActivity.this);
-        String url = "http://192.168.1.211:8080/twins/users/login/2021b.stanislav.krot/2@gmail.com";
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+        String url = "http://192.168.1.211:8080/twins/users/login/defaultName/" + email;
+        JsonObjectRequest  jsonArrayRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject >() {
             @Override
-            public void onResponse(JSONArray response) {
-                JSONArray jsonArray = response;
-                Log.d("jsonj",jsonArray.toString());
-
-                try {
-                    for(int i=0;i<jsonArray.length();i++)
-                    {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        JSONObject jsonUserId = jsonObject.getJSONObject("userId");
+            public void onResponse(JSONObject   response) {
+                try{
+                    // Loop through the array elements
+                    for(int i=0;i<response.length();i++){
+                        JSONObject jsonUserId = response.getJSONObject("userId");
                         String userEmail = jsonUserId.getString("email");
-                        String userRole = jsonObject.getString("role");
-                        String username = jsonObject.getString("username");
-                        String avatar = jsonObject.getString("avatar");
+                        String userRole = response.getString("role");
+                        String username = response.getString("username");
+                        String avatar = response.getString("avatar");
                         Account c = new Account(userEmail,userRole,username,avatar);
                         alist.add(c);
+                        Log.d("ptt",c.toString());
                     }
-                }
-                catch (Exception w)
-                {
-                    Log.d("stas4", "exception" + w.getMessage());
+                }catch (JSONException e){
+                    e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("stas4", "exception");
             }
         });
         requestQueue.add(jsonArrayRequest);
@@ -143,6 +144,10 @@ public class StartUpActivity extends AppCompatActivity {
 
     private void settingsActivity() {
         Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+        intent.putExtra("USERNAME", username);
+        intent.putExtra("ROLE", role);
+        intent.putExtra("AVATAR", avatar);
+        intent.putExtra("EMAIL", email);
         this.startActivity(intent);
     }
 

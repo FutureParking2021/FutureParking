@@ -104,7 +104,7 @@ public class UpdateItemActivity extends AppCompatActivity {
     }
 
     private void putRequest() {
-        String url = "http://192.168.1.211:8080/twins/items/2021b.stanislav.krot/1@gmail.com/defaultName/b280ca29-0e68-4afe-b923-cc41c9730cc5";
+        String url = "http://192.168.1.211:8080/twins/items/2021b.stanislav.krot/1@gmail.com/defaultName/078a4985-870a-4cf6-9c52-084b54925cfa";
         JSONObject js = new JSONObject();
         JSONObject itemJs = new JSONObject();
         JSONObject createdJs = new JSONObject();
@@ -147,22 +147,28 @@ public class UpdateItemActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("stas1put", response.toString() + " i am queen");
+                        Log.d("stas14", response.toString() + " i am queen");
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("stas1", "Error: " + error.getMessage());
+                Log.d("stas14", "Error: " + error.getStackTrace().toString());
+                try {
+                    byte[] htmlBodyBytes = error.networkResponse.data;
+                    Log.e("stas14", new String(htmlBodyBytes), error);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
         }) {
             @Override
             protected Map<String,String> getParams(){
-                Log.d("stas1","getting params");
+                Log.d("stas14","getting params");
 //                Gson gson = new Gson();
 //                String json = gson.toJson(account);
                 Map<String,String> params = new HashMap<String,String>();
 
-                Log.d("stas1","returned params");
+                Log.d("stas14","returned params");
                 return params;
             }
             @Override
@@ -175,8 +181,6 @@ public class UpdateItemActivity extends AppCompatActivity {
         };
 
         Volley.newRequestQueue(this).add(jsonObjReq);
-
-
     }
 
     private void findViews() {

@@ -20,6 +20,10 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView settings_LBL_timer;
     private TextView settings_LBL_owner;
     private Switch settings_SWT_screenOn;
+    private String role;
+    private String email;
+    private String username;
+    private String avatar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +33,10 @@ public class SettingsActivity extends AppCompatActivity {
         settings_LBL_units.setOnClickListener(textClicked);
         settings_LBL_timer.setOnClickListener(textClicked);
         settings_LBL_owner.setOnClickListener(textClicked);
+        role = getIntent().getStringExtra("ROLE");
+        email = getIntent().getStringExtra("EMAIL");
+        username = getIntent().getStringExtra("USERNAME");
+        avatar = getIntent().getStringExtra("AVATAR");
     }
 
     private View.OnClickListener textClicked = new View.OnClickListener() {
@@ -36,7 +44,12 @@ public class SettingsActivity extends AppCompatActivity {
         public void onClick(View view) {
             if (view.getTag().toString().equals("data")) {
                 Log.d("stas", "data pressed");
+
                 Intent intent = new Intent(SettingsActivity.this, DataActivity.class);
+                intent.putExtra("USERNAME", username);
+                intent.putExtra("ROLE", role);
+                intent.putExtra("AVATAR", avatar);
+                intent.putExtra("EMAIL", email);
                 SettingsActivity.this.startActivity(intent);
             }
 

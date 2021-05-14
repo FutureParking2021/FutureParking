@@ -10,25 +10,47 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.future_parking.R;
 import com.example.future_parking.classes.Account;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class DataActivity extends AppCompatActivity {
-    private EditText data_EDT_name;
-    private EditText data_EDT_password;
-    private EditText data_EDT_email;
     private Button data_BTN_save;
+
     private Account account;
     String newName;
     String newEmail;
-    String newPassword;
+    private EditText data_EDT_name;
+    private EditText data_EDT_avatar;
+    private EditText data_EDT_email;
+    String newAvatar;
+    private String role;
+    private String email;
+    private String username;
+    private String avatar;
+    private String space = "2021b.stanislav.krot";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data);
-
         findViews();
         data_BTN_save.setOnClickListener(save);
+        email = getIntent().getStringExtra("EMAIL");
+        role = getIntent().getStringExtra("ROLE");
+        Log.d("username3", "role= " + role);
+        username = getIntent().getStringExtra("USERNAME");
+        avatar = getIntent().getStringExtra("USERNAME");
     }
 
     private View.OnClickListener save = new View.OnClickListener() {
@@ -44,7 +66,7 @@ public class DataActivity extends AppCompatActivity {
 //        String userID = firebaseAuth.getCurrentUser().getUid();
 
         newName = data_EDT_name.getText().toString();
-        newPassword = data_EDT_password.getText().toString();
+        newAvatar = data_EDT_avatar.getText().toString();
         newEmail = data_EDT_email.getText().toString();;
 
         if (!validate()) {
@@ -52,15 +74,14 @@ public class DataActivity extends AppCompatActivity {
             onSignupFailed();
             return;
         }
-        if(!newName.isEmpty()){
-//            database.getReference().child("users").child(userID).child("name").setValue(newName);
-
+        if(newName.isEmpty()){
+            newName = username;
         }
-        if(!newPassword.isEmpty()){
-//            database.getReference().child("users").child(userID).child("password").setValue(newPassword);
+        if(newAvatar.isEmpty()){
+            newAvatar = avatar;
         }
-        if(!newEmail.isEmpty()){
-//            database.getReference().child("users").child(userID).child("email").setValue(newEmail);
+        if(newEmail.isEmpty()){
+            newEmail = email;
         }
         Log.d("stas", "update succssess");
         onSignupSuccess();
@@ -84,11 +105,11 @@ public class DataActivity extends AppCompatActivity {
             data_EDT_email.setError(null);
         }
 
-        if (!newPassword.isEmpty() && (newPassword.length() < 4 || newPassword.length() > 10)) {
-            data_EDT_password.setError("between 4 and 10 alphanumeric characters");
+        if (!newAvatar.isEmpty() && (newAvatar.length() < 1)) {
+            data_EDT_avatar.setError("at least 1 character");
             valid = false;
         } else {
-            data_EDT_password.setError(null);
+            data_EDT_avatar.setError(null);
         }
 
         return valid;
@@ -101,21 +122,75 @@ public class DataActivity extends AppCompatActivity {
 
     public void onSignupSuccess() {
         data_BTN_save.setEnabled(true);
-        setResult(RESULT_OK, null);
-        finish();
+//        setResult(RESULT_OK, null);
+        putRequest();
+//        finish();
     }
 
-    private void saveAccountToFB(Account updateAccount) {
-//        String userID = firebaseAuth.getCurrentUser().getUid();
-//        DatabaseReference myDataRef = database.getReference("users");
-//        myDataRef.child(userID).setValue(account);
-//        Log.d("stas", "info CHANGED");
+    private void putRequest() {
+        String url = "http://192.168.1.211:8080/twins/users/2021b.stanislav.krot/" + email;
+        JSONObject js = new JSONObject();
+        JSONObject jsUid = new JSONObject();
+        Log.d("ptt","old email " + email);
+        Log.d("ptt", "email " + newEmail);
+        try {
+            jsUid.put("space",space);
+            jsUid.put("email",newEmail);
+            js.put("userId",jsUid);
+            js.put("role",role);
+            js.put("username", newName);
+            js.put("avatar",newAvatar);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(
+                Request.Method.PUT, url, js,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("stas1put", response.toString() + " i am queen");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("ptt", "Error: " + error.getMessage());
+                try {
+                    byte[] htmlBodyBytes = error.networkResponse.data;
+                    Log.e("stasptt", new String(htmlBodyBytes), error);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+        }) {
+            @Override
+            protected Map<String,String> getParams(){
+                Log.d("stas1","getting params");
+//                Gson gson = new Gson();
+//                String json = gson.toJson(account);
+                Map<String,String> params = new HashMap<String,String>();
+
+                Log.d("stas1","returned params");
+                return params;
+            }
+            @Override
+            public Map<String,String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+
+                params.put("Content-Type","application/json; charset=utf-8");
+                return params;
+            }
+        };
+
+        Volley.newRequestQueue(this).add(jsonObjReq);
+
+
     }
+
 
 
     private void findViews() {
         data_EDT_name = findViewById(R.id.data_EDT_name);
-        data_EDT_password = findViewById(R.id.data_EDT_password);
+        data_EDT_avatar = findViewById(R.id.data_EDT_avatar);
         data_EDT_email = findViewById(R.id.data_EDT_email);
         data_BTN_save = findViewById(R.id.data_BTN_save);
     }

@@ -83,24 +83,6 @@ public class LoginActivity extends AppCompatActivity {
         return  true;
     }
 
-    private void checkUserValid() {
-        if (checkValidLBl(login_EDT_email, login_EDT_password)) {
-            login_BTN_login.setClickable(true);
-            login_PGB_pgb.setVisibility(View.VISIBLE);
-            String email = login_EDT_email.getText().toString().trim();
-            String password = login_EDT_password.getText().toString().trim();
-            // if data correct loginSuccess else loginFailed
-        }
-
-    }
-
-    private void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "login failed -> username or password is incorrect " , Toast.LENGTH_LONG).show();
-        login_BTN_login.setEnabled(true);
-        login_PGB_pgb.setVisibility(View.GONE);
-
-    }
-
     private void onLoginSuccess() {
         Toast.makeText(getBaseContext(), "Connected Successfully " , Toast.LENGTH_LONG).show();
     }
@@ -150,6 +132,9 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(LoginActivity.this, StartUpActivity.class);
                 intent.putExtra("EMAIL", c.getEmail());
                 intent.putExtra("ROLE", c.getRole());
+                intent.putExtra("AVATAR", c.getAvatar());
+                intent.putExtra("USERNAME", c.getUsername());
+
                 this.startActivity(intent);
                 onLoginSuccess();
                 finish();
