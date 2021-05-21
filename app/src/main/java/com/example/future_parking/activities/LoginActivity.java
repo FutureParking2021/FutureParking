@@ -19,6 +19,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.future_parking.R;
@@ -26,6 +27,7 @@ import com.example.future_parking.classes.Account;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -69,79 +71,50 @@ public class LoginActivity extends AppCompatActivity {
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
-    private boolean checkValidLBl(EditText email, EditText password) {
-        if(isEmail(email) == false || isEmpty(email))
-        {
-            email.setError("Enter valid email!");
-            return false;
-        }
-        else if (isEmpty(password) || password.length() < 4 || password.length() > 10  ) {
-            password.setError("between 4 and 10 alphanumeric characters");
-            return false;
-        }
+    private void onLoginSuccess(Account c, Intent intent) {
 
-        return  true;
-    }
-
-    private void onLoginSuccess() {
+        this.startActivity(intent);
         Toast.makeText(getBaseContext(), "Connected Successfully " , Toast.LENGTH_LONG).show();
+        finish();
     }
 
     private void getRequest() {
         RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
-        String url = "http://192.168.1.211:8080/twins/admin/users/2021b.twins/1@gmail.com";
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+        String url = "http://192.168.1.211:8010/twins/users/login/2021b.stanislav.krot/" + login_EDT_email.getText().toString();
+        JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject >() {
             @Override
-            public void onResponse(JSONArray response) {
-                JSONArray jsonArray = response;
-                Log.d("json",jsonArray.toString());
-                try {
-                    for(int i=0;i<jsonArray.length();i++)
-                    {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        JSONObject jsonUserId = jsonObject.getJSONObject("userId");
-                        String email = jsonUserId.getString("email");
-                        String role = jsonObject.getString("role");
-                        String username = jsonObject.getString("username");
-                        String avatar = jsonObject.getString("avatar");
-                        Account c = new Account(email,role,username,avatar);
-                        Log.d("stas5",c.toString());
-                        accountList.add(c);
-                        Log.d("account","account size " +  accountList.size());
+            public void onResponse(JSONObject   response) {
+                try{
+                    // Loop through the array elements
+                    for(int i=0;i<response.length();i++){
+                        JSONObject jsonUserId = response.getJSONObject("userId");
+                        String userEmail = jsonUserId.getString("email");
+                        String userRole = response.getString("role");
+                        String username = response.getString("username");
+                        String avatar = response.getString("avatar");
+                        Account c = new Account(userEmail,userRole,username,avatar);
+//                        alist.add(c);
 
+                        Log.d("ptt",c.toString());
+                        Intent intent = new Intent(LoginActivity.this, StartUpActivity.class);
+                        intent.putExtra("EMAIL", c.getEmail());
+                        intent.putExtra("ROLE", c.getRole());
+                        Log.d("ptt","role is " + c.getRole());
+                        intent.putExtra("AVATAR", c.getAvatar());
+                        intent.putExtra("USERNAME", c.getUsername());
+                        onLoginSuccess(c, intent);
                     }
-                    checkValidUser(accountList);
-                }
-                catch (Exception w)
-                {
-                    Log.d("stas4", "exception" + w.getMessage());
+                }catch (JSONException e){
+                    e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("stas4", "exception");
             }
         });
         requestQueue.add(jsonArrayRequest);
     }
-
-    private void checkValidUser(ArrayList<Account> accountList) {
-        for (Account c : accountList) {
-            if (c.getEmail().equals(login_EDT_email.getText().toString())) {
-                Intent intent = new Intent(LoginActivity.this, StartUpActivity.class);
-                intent.putExtra("EMAIL", c.getEmail());
-                intent.putExtra("ROLE", c.getRole());
-                intent.putExtra("AVATAR", c.getAvatar());
-                intent.putExtra("USERNAME", c.getUsername());
-
-                this.startActivity(intent);
-                onLoginSuccess();
-                finish();
-            }
-        }
-    }
-
 
     private View.OnClickListener fillAccount = new View.OnClickListener() {
         @Override

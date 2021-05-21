@@ -63,17 +63,28 @@
         android:layout_below="@id/NewParking_EDT_Location"
         android:tag="location"
         />
+        <EditText
+        android:id="@+id/NewParking_EDT_pricePerQuarterHour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="price Per 1/4 Hour"
+        android:layout_marginTop="25dp"
+        android:layout_below="@id/NewParking_EDT_parkNum"
+        android:tag="location"
+        />
 
     <Button
         android:id="@+id/NewParking_BTN_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Park"
-        android:layout_below="@id/NewParking_EDT_parkNum"
+        android:layout_below="@id/NewParking_EDT_pricePerQuarterHour"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:tag="add"
         />
+
+
 
 
 </RelativeLayout>

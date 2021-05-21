@@ -27,11 +27,13 @@ import java.util.ArrayList;
 
 public class StartUpActivity extends AppCompatActivity {
     private MaterialButton Start_BTN_bikeRide;
-    private MaterialButton Start_BTN_goal;
-    private MaterialButton Start_BTN_history;
-    private MaterialButton Start_BTN_statistics;
     private MaterialButton Start_BTN_settings;
     private MaterialButton Start_BTN_logout;
+
+
+  private MaterialButton Start_BTN_makePark;
+  private MaterialButton Start_BTN_updatePark;
+  private MaterialButton Start_BTN_operations;
     private String role;
     private String email;
     private String username;
@@ -53,49 +55,21 @@ public class StartUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start_up);
         findViews();
         Start_BTN_bikeRide.setOnClickListener(buttonClickListener);
-        Start_BTN_goal.setOnClickListener(buttonClickListener);
-        Start_BTN_history.setOnClickListener(buttonClickListener);
-        Start_BTN_statistics.setOnClickListener(buttonClickListener);
+        Start_BTN_makePark.setOnClickListener(buttonClickListener);
+        Start_BTN_updatePark.setOnClickListener(buttonClickListener);
+        Start_BTN_operations.setOnClickListener(buttonClickListener);
         Start_BTN_settings.setOnClickListener(buttonClickListener);
         Start_BTN_logout.setOnClickListener(buttonClickListener);
         email = getIntent().getStringExtra("EMAIL");
         role = getIntent().getStringExtra("ROLE");
         username = getIntent().getStringExtra("USERNAME");
-        avatar = getIntent().getStringExtra("USERNAME");
+        avatar = getIntent().getStringExtra("AVATAR");
 
-        getRequest();
+//        getRequest();
     }
 
 
-    private void getRequest() {
-        RequestQueue requestQueue = Volley.newRequestQueue(StartUpActivity.this);
-        String url = "http://192.168.1.211:8080/twins/users/login/defaultName/" + email;
-        JsonObjectRequest  jsonArrayRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject >() {
-            @Override
-            public void onResponse(JSONObject   response) {
-                try{
-                    // Loop through the array elements
-                    for(int i=0;i<response.length();i++){
-                        JSONObject jsonUserId = response.getJSONObject("userId");
-                        String userEmail = jsonUserId.getString("email");
-                        String userRole = response.getString("role");
-                        String username = response.getString("username");
-                        String avatar = response.getString("avatar");
-                        Account c = new Account(userEmail,userRole,username,avatar);
-                        alist.add(c);
-                        Log.d("ptt",c.toString());
-                    }
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        });
-        requestQueue.add(jsonArrayRequest);
-    }
+
 
 
     private View.OnClickListener buttonClickListener = new View.OnClickListener() {
@@ -109,22 +83,22 @@ public class StartUpActivity extends AppCompatActivity {
         if(view.getTag().toString().equals("lets ride")){
             rideActivity();
         }
-        if(view.getTag().toString().equals("goal")){
+        if(view.getTag().toString().equals("make")){
             if(role.equals("MANAGER")){
-                goalActivity();
+                makeParkingActivity();
             } else {
                 Toast.makeText(StartUpActivity.this,"ONLY MANAGER CAN CREATE PARK",Toast.LENGTH_SHORT).show();
             }
         }
-        if(view.getTag().toString().equals("history")){
+        if(view.getTag().toString().equals("update")){
             if(role.equals("MANAGER")){
-                historyActivity();
+                updateActivity();
             } else {
                 Toast.makeText(StartUpActivity.this,"ONLY MANAGER CAN CREATE PARK",Toast.LENGTH_SHORT).show();
             }
         }
-        if(view.getTag().toString().equals("statistics")){
-            statisticsActivity();
+        if(view.getTag().toString().equals("operations")){
+            operationsActivity();
         }
         if(view.getTag().toString().equals("settings")){
             settingsActivity();
@@ -151,32 +125,34 @@ public class StartUpActivity extends AppCompatActivity {
         this.startActivity(intent);
     }
 
-    private void statisticsActivity() {
-//        Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
-//        this.startActivity(intent);
-    }
-
-    private void historyActivity() {
-        Intent intent = new Intent(getApplicationContext(), UpdateItemActivity.class);
+    private void operationsActivity() {
+        Intent intent = new Intent(getApplicationContext(),OperationsActivity.class);
+        intent.putExtra("EMAIL",email);
         this.startActivity(intent);
     }
 
-    private void goalActivity() {
+    private void updateActivity() {
+        Intent intent = new Intent(getApplicationContext(), UpdateItemActivity.class);
+        this.startActivity(intent);
+        intent.putExtra("EMAIL", email);
+    }
+
+    private void makeParkingActivity() {
         Intent intent = new Intent(getApplicationContext(), NewParkingActivity.class);
-        intent.putExtra("EMAIL", "1@gmail.com");
+        intent.putExtra("EMAIL", email);
         this.startActivity(intent);
     }
 
     private void rideActivity() {
         Intent intent = new Intent(getApplicationContext(), MapActivity.class);
-        StartUpActivity.this.startActivity(intent);
+        this.startActivity(intent);
     }
 
     private void findViews(){
         Start_BTN_bikeRide = findViewById(R.id.Start_BTN_bikeRide);
-        Start_BTN_goal = findViewById(R.id.Start_BTN_goal);
-        Start_BTN_history = findViewById(R.id.Start_BTN_history);
-        Start_BTN_statistics = findViewById(R.id.Start_BTN_statistics);
+        Start_BTN_makePark = findViewById(R.id.Start_BTN_makePark);
+        Start_BTN_updatePark = findViewById(R.id.Start_BTN_updatePark);
+        Start_BTN_operations = findViewById(R.id.Start_BTN_operations);
         Start_BTN_settings = findViewById(R.id.Start_BTN_settings);
         Start_BTN_logout = findViewById(R.id.Start_BTN_logout);
     }

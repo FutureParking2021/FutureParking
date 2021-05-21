@@ -96,7 +96,7 @@ public class UpdateItemActivity extends AppCompatActivity {
 
     private Parking createPark() {
         cb = new CreatedBy(new UserId("2021b.stanislav.krot",email));
-        itemAtt.put("KEY1","message1");
+        itemAtt.put("KEY2","message1");
 //        itemAtt.put("KEY2",3);
 //        itemAtt.put("KEY3",true);
 //        itemAtt.put("KEY4",5.3);
@@ -104,7 +104,7 @@ public class UpdateItemActivity extends AppCompatActivity {
     }
 
     private void putRequest() {
-        String url = "http://192.168.1.211:8080/twins/items/2021b.stanislav.krot/1@gmail.com/defaultName/078a4985-870a-4cf6-9c52-084b54925cfa";
+        String url = "http://192.168.1.211:8010/twins/items/2021b.stanislav.krot/1@gmail.com/defaultName/a9f29e05-8c3a-428e-b7fe-c6ec59d5f948";
         JSONObject js = new JSONObject();
         JSONObject itemJs = new JSONObject();
         JSONObject createdJs = new JSONObject();

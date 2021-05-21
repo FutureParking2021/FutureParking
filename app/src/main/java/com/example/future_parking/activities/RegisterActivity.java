@@ -173,7 +173,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private void postRequest() {
-        String url = "http://192.168.1.211:8080/twins/users/";
+        String url = "http://192.168.1.211:8010/twins/users/";
         JSONObject js = new JSONObject();
         try {
             js.put("email",account.getEmail());

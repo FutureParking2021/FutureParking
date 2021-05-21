@@ -26,14 +26,29 @@
               android:layout_height="wrap_content"
               android:layout_margin="20dp"
               android:background="@android:color/white"
+              android:orientation="horizontal"
               >
-               <EditText
-                   android:id="@+id/map_EDT_place_autocomplete"
-                   android:tag="search"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
 
+               <Button
+                   android:id="@+id/map_MAP_show"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_weight="3"
+                   android:text="SHOW"
+                   android:tag="show"
                    />
+
+               <TextView
+                   android:id="@+id/map_MAP_sort"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_marginLeft="70dp"
+                   android:layout_weight="1"
+                    android:text="SORT BY"
+                   android:textSize="35sp"
+                   android:tag="sort"
+                   />
+
                ></LinearLayout>
 
           <LinearLayout
@@ -188,7 +203,8 @@
               android:layout_marginRight="17dp"
               android:layout_marginBottom="167dp"
               android:backgroundTint="@color/places_autocomplete_fullscreen_background"
-              android:src="@drawable/ic_my_gps" />
+              android:src="@drawable/ic_my_gps" /><![CDATA[
 
-          ></RelativeLayout>
+          >]]>
+     </RelativeLayout>
 </LinearLayout>

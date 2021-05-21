@@ -40,6 +40,7 @@ public class NewParkingActivity extends AppCompatActivity {
     private EditText NewParking_EDT_name;
     private EditText NewParking_EDT_type;
     private EditText NewParking_EDT_parkNum;
+    private EditText NewParking_EDT_pricePerQuarterHour;
     private String type;
     private String active;
     private String location;
@@ -50,7 +51,7 @@ public class NewParkingActivity extends AppCompatActivity {
     private Location currentLocation;
     private CreatedBy cb;
     private String locationStr;
-
+//    private String email;
 
     private Map<String,Object> itemAtt = new HashMap<String,Object>();
     private Date date = new Date();
@@ -67,6 +68,8 @@ public class NewParkingActivity extends AppCompatActivity {
         NewParking_EDT_active.setOnClickListener(textClicked);
         NewParking_EDT_name.setOnClickListener(textClicked);
         NewParking_EDT_type.setOnClickListener(textClicked);
+        NewParking_EDT_pricePerQuarterHour.setOnClickListener(textClicked);
+        NewParking_EDT_parkNum.setOnClickListener(textClicked);
     }
     private View.OnClickListener textClicked = new View.OnClickListener() {
         @Override
@@ -92,16 +95,15 @@ public class NewParkingActivity extends AppCompatActivity {
 
     private Parking createPark() {
         cb = new CreatedBy(new UserId("2021b.stanislav.krot",email));
-        itemAtt.put("KEY1","message1");
-//        itemAtt.put("KEY2",3);
-//        itemAtt.put("KEY3",true);
-//        itemAtt.put("KEY4",5.3);
-        return new Parking(new ParkingId(),type,name,Boolean.parseBoolean(active),date,cb,currentLocation,itemAtt);
+        itemAtt.put("numOfParking",NewParking_EDT_parkNum.getText().toString());
+        itemAtt.put("priceOfParking",NewParking_EDT_pricePerQuarterHour.getText().toString());
+
+        return new Parking(new ParkingId(),"parkingLot",name,Boolean.parseBoolean(active),date,cb,currentLocation,itemAtt);
     }
 
 
     private void postRequest() {
-        String url = "http://192.168.1.211:8080/twins/items/2021b.stanislav.krot/1@gmail.com";
+        String url = "http://192.168.1.211:8010/twins/items/2021b.stanislav.krot/" + email;
         JSONObject js = new JSONObject();
         JSONObject itemJs = new JSONObject();
         JSONObject createdJs = new JSONObject();
@@ -150,6 +152,12 @@ public class NewParkingActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("stas12", "Error: " + error.getMessage());
+                try {
+                    byte[] htmlBodyBytes = error.networkResponse.data;
+                    Log.e("stasptt", new String(htmlBodyBytes), error);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
         }) {
             @Override
@@ -193,5 +201,6 @@ public class NewParkingActivity extends AppCompatActivity {
         NewParking_EDT_name = findViewById(R.id.NewParking_EDT_name);
         NewParking_EDT_type = findViewById(R.id.NewParking_EDT_type);
         NewParking_EDT_parkNum = findViewById(R.id.NewParking_EDT_parkNum);
+        NewParking_EDT_pricePerQuarterHour = findViewById(R.id.NewParking_EDT_pricePerQuarterHour);
     }
 }

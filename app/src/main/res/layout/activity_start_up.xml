@@ -49,26 +49,26 @@
         >
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/Start_BTN_goal"
+            android:id="@+id/Start_BTN_makePark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_weight="1"
             app:iconTint="#110E15"
-            android:text="goal"
+            android:text="make parking"
             android:textColor="#0D0C0E"
-            android:tag="goal"
+            android:tag="make"
             />
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/Start_BTN_history"
+            android:id="@+id/Start_BTN_updatePark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_weight="1"
-            android:text="history"
+            android:text="update parking"
             app:iconTint="#110E15"
             android:textColor="#0D0C0E"
-            android:tag="history"
+            android:tag="update"
             />
 
 
@@ -94,15 +94,15 @@
             android:tag="settings"
             />
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/Start_BTN_statistics"
+            android:id="@+id/Start_BTN_operations"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="statistics"
+            android:text="operations"
             app:iconTint="#110E15"
             android:textColor="#0D0C0E"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:tag="statistics"
+            android:tag="operations"
             />
 
     </LinearLayout>

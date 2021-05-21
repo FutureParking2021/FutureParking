@@ -7,8 +7,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -18,7 +20,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,12 +38,11 @@ import com.akexorcist.googledirection.model.Leg;
 import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.util.DirectionConverter;
 import com.bumptech.glide.Glide;
-import com.example.future_parking.classes.Account;
-
 import com.example.future_parking.LocationService;
 import com.example.future_parking.R;
-
+import com.example.future_parking.classes.Account;
 import com.example.future_parking.uttils.MyLoc;
+
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -56,7 +59,8 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-//import com.google.common.base.Stopwatch;
+
+
 import com.google.gson.Gson;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.maps.android.SphericalUtil;
@@ -88,7 +92,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //
     //////////////////////////variables////////////////
     private final double M_PI = 3.14159265358979323846;
-    int n;
     private final static int AUTOCOMPLETE_REQUEST_CODE = 100;
     private final int LOCATION_PERMISSIONS_REQUEST_CODE = 125;
     private String serverKey = "AIzaSyBtpCR42KuS-R10e52uqAILezRZ7ixHQZA"; // Api Key For Google Direction API \\
@@ -96,14 +99,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MarkerOptions place_for_serach;
     private FloatingActionButton map_BTN_directions, map_BTN_gps, map_BTN_start, map_BTN_stop, map_BTN_state_elite,
             map_BTN_start_timer,map_BTN_pause;
+    private TextView map_MAP_sort;
+    private Button map_MAP_show;
     private AutocompleteSupportFragment autocompleteFragment;
     private EditText map_EDT_place_autocomplete;
     private TextView map_LBL_distance, map_LBL_time,map_LBL_timer;
     private LocalBroadcastManager localBroadcastManager;
     private ImageView map_IMG_zoomIn, map_IMG_zoomOut;
-    public static final String BROADCAST_NEW_LOCATION_DETECTED = "com.example.ridewithme.NEW_LOCATION_DETECTED";
+    public static final String BROADCAST_NEW_LOCATION_DETECTED = "com.example.future_parking.NEW_LOCATION_DETECTED";
     private LatLng location, destination;
     private String sourceLocation;
+    private double avg_Speed = 0.0;
     private Account account;
     private boolean start_timer = false;
     private boolean pause_timer = false;
@@ -117,16 +123,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private String duration;
     private int counter=0;
     private int count_speed =0;
-    private double avg_Speed = 0.0;
+    private String sortBy;
+    private String sortChoose;
     //////////////////////////variables////////////////
 
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d("plocation", "before getting location" + intent.getAction());
+
             if (intent.getAction().equals(BROADCAST_NEW_LOCATION_DETECTED)) {
                 String json = intent.getStringExtra("EXTRA_LOCATION");
                 try {
                     MyLoc lastLocation = new Gson().fromJson(json, MyLoc.class);
+                    Log.d("plocation", "lat " +lastLocation.getLatitude() + " long " + lastLocation.getLongitude() );
                     location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
                     sourceLocation = getCompleteAddressString(lastLocation.getLatitude(), lastLocation.getLongitude());
                     avg_Speed+=lastLocation.getSpeed();
@@ -139,28 +149,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     };
 
-    private void timerIsOn() {
-        new Timer().scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if(!pause_timer)
-                {
-                    counter++;
-
-                    // Return to UI Thread
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            map_LBL_timer.setText("timer: " + counter);
-                        }
-                    });
-
-                }
-
-
-            }
-        }, 0, 1000);
-    }
+//    private void checkUserChoise() {
+//        new Timer().scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//
+//                    // Return to UI Thread
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            map_LBL_timer.setText("timer: " + counter);
+//                        }
+//                    });
+//            }
+//        }, 0, 1000);
+//    }
 
     private void createCustomFinishTour() {
         Toast.makeText(getApplicationContext(),"Finish The Tour",Toast.LENGTH_LONG).show();
@@ -176,26 +179,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         askLocationPermissions();
         init();
         map_BTN_start_timer.setVisibility(View.GONE);
-        if(!start_timer)
-        {
-            map_BTN_start_timer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    start_timer=true;
-                    pause_timer=false;
-                    timerIsOn();// method to run the timer on ui thread
-                }
-            });
-
-
-
-        }
-
         map_BTN_stop.setClickable(false);
         addPIcWithGlide();
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map_MAP_google_map);
         mapFragment.getMapAsync(this);
+//        checkUserChoise();
     }
 
     private String getDateFormat()
@@ -207,50 +196,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Log.d("johny", "getDateFormat: date = " + date);
         return date;
     }
-//
-//    private void getUserFromFB() {
-//
-//        String userID = firebaseAuth.getCurrentUser().getUid();
-//        Log.d("johny", "getUserFromFB: userID =  " + userID);
-//        //-------- insert to Cloud FireBase  -----------////////////////
-//        DatabaseReference myDataRef = database.getReference("users");
-//        myDataRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // This method is called once with the initial value and again
-//                // whenever data at this location is updated.
-//                //Tour tour = dataSnapshot.getValue(Tour.class);
-//                account = dataSnapshot.getValue(Account.class);
-//                if(account.getTours()==null)
-//                {
-//                    account =account.setTours(new ArrayList<Tour>());
-//                }
-//                Log.d("johny", "onDataChange: name is " + account.getName());
-//                Log.d("stas", "the tours AFTER are :" + account.getTours());
-//                account.getTours().add(myTour);
-//                addTourToFB(account);
-//                Log.d("johny", "onDataChange: dest is " + account.getTours().get(0).getDest());
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                // Failed to read value
-//                Log.d("johny", "Failed to read value.", error.toException());
-//            }
-//        });
-//
-//
-//    }
 
-    //
-//    private void addTourToFB(Account account) {
-//        String userID = firebaseAuth.getCurrentUser().getUid();
-//        Log.d("johny", "addTourToFB: id = " + userID);
-//        //-------- insert to Cloud Firebase --> the set of every account with unique userID---------------- //
-//        DatabaseReference myDataRef = database.getReference("users");
-//        myDataRef.child(userID).setValue(account);
-//
-//    }
 
     private String getCompleteAddressString(double latitude, double longitude) {
         String strAdd = "";
@@ -300,7 +246,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             startService();
         } else if (view.getTag().toString().equals("stop")) {
             stopService();
-            validateButtons();
+//            validateButtons();
             start_timer=false;
         } else if (view.getTag().toString().equals("pause")) {
             pauseService();
@@ -317,7 +263,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             changeMapType();
 
         } else if (view.getTag().toString().equals("gps")) {
-            validateButtons();
+//            validateButtons();
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
 
         } else if (view.getTag().toString().equals("search")) {
@@ -329,9 +275,59 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         } else if (view.getTag().toString().equals("zoom_out")) {
             mMap.animateCamera(CameraUpdateFactory.zoomOut());
 
+        } else if (view.getTag().toString().equals("sort")){
+            String[] units = {"Distance", "Price","free parks"};
+            unitSelection(units);
+            Log.d("stas", "sort by " + sortBy);
+        }else if (view.getTag().toString().equals("show")){
+
         }
 
     }
+
+    private void unitSelection(String[] choose) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose an option");
+        builder.setItems(choose, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                sortBy = choose[which];
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MapActivity.this);
+                builder.setTitle("Sort By " + sortBy);
+
+// Set up the input
+                final EditText input = new EditText(MapActivity.this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                input.setInputType(InputType.TYPE_CLASS_NUMBER);
+                builder.setView(input);
+
+// Set up the buttons
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sortChoose = input.getText().toString();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+                if(sortBy.equals("Distance")){
+                    //TODO sort by distance
+                }else if (sortBy.equals("Price")){
+                    //TODO sort by price
+
+                }
+            }
+        });
+        builder.show();
+    }
+
     private static Double distanceBetween(LatLng point1, LatLng point2) {
         if (point1 == null || point2 == null) {
             return null;
@@ -391,7 +387,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-//                createTour();
                 addDestPlaceInMap(data);
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
@@ -405,21 +400,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-//    private void createTour() {
-//        dateFormat = getDateFormat();
-//        myTour = new Tour(dateFormat, 0, sourceLocation, null, 0,distanceByKm);
-//    }
-
     private void addDestPlaceInMap(Intent data) {
-//        mMap.clear();
-//        Place place = Autocomplete.getPlaceFromIntent(data);
-//        destination = place.getLatLng();
+        mMap.clear();
+        Place place = Autocomplete.getPlaceFromIntent(data);
+        destination = place.getLatLng();
 //        String dest = getCompleteAddressString(destination.latitude, destination.longitude);
-////        myTour.setDest(dest);
-//        map_EDT_place_autocomplete.setText(place.getAddress());
-//        place_for_serach = new MarkerOptions().position(place.getLatLng()).title("Dest");
-//        mMap.addMarker(place_for_serach);
-//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 15));
+        map_EDT_place_autocomplete.setText(place.getAddress());
+        place_for_serach = new MarkerOptions().position(place.getLatLng()).title("Dest");
+        mMap.addMarker(place_for_serach);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 15));
     }
 
     private void validateButtons() {
@@ -461,9 +450,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map_BTN_gps = findViewById(R.id.map_BTN_gps);
         map_BTN_start = findViewById(R.id.map_BTN_start);
         map_BTN_stop = findViewById(R.id.map_BTN_stop);
-        map_EDT_place_autocomplete = findViewById(R.id.map_EDT_place_autocomplete);
-        autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.map_EDT_place_autocomplete);
+//        map_EDT_place_autocomplete = findViewById(R.id.map_EDT_place_autocomplete);
+//        autocompleteFragment = (AutocompleteSupportFragment)
+//                getSupportFragmentManager().findFragmentById(R.id.map_EDT_place_autocomplete);
         map_LBL_distance = findViewById(R.id.map_LBL_distance);
         map_LBL_time = findViewById(R.id.map_LBL_time);
         map_BTN_state_elite = findViewById(R.id.map_BTN_state_elite);
@@ -471,8 +460,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map_IMG_zoomIn = findViewById(R.id.map_IMG_zoomIn);
         map_IMG_zoomOut = findViewById(R.id.map_IMG_zoomOut);
         map_BTN_start_timer= findViewById(R.id.map_BTN_start_timer);
-//        map_LBL_timer = findViewById(R.id.map_LBL_timer);
+        map_MAP_sort = findViewById(R.id.map_MAP_sort);
+        map_MAP_show = findViewById(R.id.map_MAP_show);
     }
+
+
 
     private void getDestinationInfo(LatLng latLngDestination) {
         final LatLng origin = location;
@@ -583,7 +575,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map_BTN_pause.setClickable(true);
 
         actionToService(LocationService.START_FOREGROUND_SERVICE);
-        validateButtons();
+//        validateButtons();
     }
 
     private void pauseService() {
@@ -591,37 +583,30 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map_BTN_pause.setClickable(false);
         actionToService(LocationService.PAUSE_FOREGROUND_SERVICE);
         pause_timer=true;
-        validateButtons();
+//        validateButtons();
     }
 
     private void stopService() {
         Log.d("stas", "stop Service");
         map_BTN_stop.setClickable(false);
         actionToService(LocationService.STOP_FOREGROUND_SERVICE);
-        validateButtons();
+//        validateButtons();
         pause_timer=true;
-        finishTour();
     }
 
-    private void finishTour() {
-//        myTour.setTime_in_minutes(counter);
-//        String[] km = distance.split(" ");
-//        double total_km = Double.parseDouble(km[0]);
-//        myTour.setKm(total_km);
-//        myTour.setAvg_speed(avg_Speed/count_speed);
-//        Log.d("johny", "finishTour: " + myTour.getAvg_speed() + myTour.getDest());
-//        getUserFromFB();
-//        createCustomFinishTour();
-    }
 
     private void actionToService(String action) {
-        Intent startIntent = new Intent(MapActivity.this, LocationService.class);
+        Intent startIntent = new Intent(this, LocationService.class);
+        Log.d("StartSer", "String = " + action);
         startIntent.setAction(action);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.d("StartSer", "true = " + action);
+
             startForegroundService(startIntent);
 
         } else {
+            Log.d("StartSer", "else = " + action);
+
             startService(startIntent);
         }
     }
@@ -657,6 +642,5 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
     }
-
 
 }

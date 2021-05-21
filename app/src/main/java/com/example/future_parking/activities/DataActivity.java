@@ -128,14 +128,14 @@ public class DataActivity extends AppCompatActivity {
     }
 
     private void putRequest() {
-        String url = "http://192.168.1.211:8080/twins/users/2021b.stanislav.krot/" + email;
+        String url = "http://192.168.1.211:8010/twins/users/2021b.stanislav.krot/" + email;
         JSONObject js = new JSONObject();
         JSONObject jsUid = new JSONObject();
         Log.d("ptt","old email " + email);
         Log.d("ptt", "email " + newEmail);
         try {
             jsUid.put("space",space);
-            jsUid.put("email",newEmail);
+            jsUid.put("email",email);
             js.put("userId",jsUid);
             js.put("role",role);
             js.put("username", newName);
