@@ -69,7 +69,7 @@ public class OperationsActivity extends AppCompatActivity {
 
             js.put("type","enterParking");
             jsItemId.put("space","2021b.stanislav.krot");
-            jsItemId.put("id","472b1e6a-278d-4e25-9d50-c154c6a73a37");
+            jsItemId.put("id","e0449554-0e1e-4eba-8b7d-0d6cc6f11241");
             jsItem.put("itemId",jsItemId);
             jsOpItem.put("item",jsItem);
 

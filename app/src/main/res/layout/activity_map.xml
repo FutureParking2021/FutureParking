@@ -47,6 +47,7 @@
                     android:text="SORT BY"
                    android:textSize="35sp"
                    android:tag="sort"
+                   android:clickable="true"
                    />
 
                ></LinearLayout>
@@ -80,24 +81,7 @@
                         />
                     ></RelativeLayout>
 
-               <RelativeLayout
-                   android:layout_height="wrap_content"
-                   android:layout_width="wrap_content">
 
-                    <ImageView
-                        android:layout_width="130dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/time" />
-                    <TextView
-                        android:id="@+id/map_LBL_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="44dp"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="casual"
-                        android:text="0 mins"
-                        />
-                    ></RelativeLayout>
 
 
                ></LinearLayout>
@@ -109,39 +93,21 @@
               android:layout_centerInParent="true"
 
               >
-               <com.google.android.material.floatingactionbutton.FloatingActionButton
-                   android:id="@+id/map_BTN_start"
-                   android:tag="start"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:backgroundTint="@color/places_autocomplete_fullscreen_background"
-                   android:src="@drawable/manbike" />
 
-               <com.google.android.material.floatingactionbutton.FloatingActionButton
-                   android:id="@+id/map_BTN_stop"
+               <TextView
+                   android:id="@+id/map_BTN_start_lat"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:backgroundTint="@color/places_autocomplete_fullscreen_background"
-                   android:src="@drawable/stop1"
-                   android:tag="stop" />
-
-               <com.google.android.material.floatingactionbutton.FloatingActionButton
-                   android:id="@+id/map_BTN_pause"
-                   android:tag="pause"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:backgroundTint="@color/places_autocomplete_fullscreen_background"
-                   android:src="@drawable/pausepic"
+                   android:textSize="0sp"
+                   android:visibility="invisible"
                    />
-               <com.google.android.material.floatingactionbutton.FloatingActionButton
-                   android:id="@+id/map_BTN_start_timer"
-                   android:tag="pause"
+               <TextView
+                   android:id="@+id/map_BTN_start_lng"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:backgroundTint="@color/places_autocomplete_fullscreen_background"
-                   android:src="@drawable/playtimer"
+                   android:textSize="0sp"
+                   android:visibility="invisible"
                    />
-
                ></LinearLayout>
 
           <ImageView
@@ -166,22 +132,6 @@
               ></ImageView>
 
           <com.google.android.material.floatingactionbutton.FloatingActionButton
-              android:id="@+id/map_BTN_directions"
-              android:tag="direction"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentRight="true"
-              android:layout_alignParentBottom="true"
-              android:layout_marginStart="15dp"
-              android:layout_marginTop="15dp"
-              android:layout_marginEnd="15dp"
-              android:layout_marginRight="17dp"
-              android:layout_marginBottom="12dp"
-              android:backgroundTint="#1681DF"
-              android:src="@drawable/ic_directions"
-              />
-
-          <com.google.android.material.floatingactionbutton.FloatingActionButton
               android:id="@+id/map_BTN_state_elite"
               android:tag="elite"
               android:layout_width="wrap_content"
@@ -189,7 +139,7 @@
               android:layout_alignParentRight="true"
               android:layout_alignParentBottom="true"
               android:layout_marginRight="17dp"
-              android:layout_marginBottom="89dp"
+              android:layout_marginBottom="80dp"
               android:backgroundTint="@color/places_autocomplete_fullscreen_background"
               android:src="@drawable/ic_satellite_on" />
 
@@ -201,7 +151,7 @@
               android:layout_alignParentRight="true"
               android:layout_alignParentBottom="true"
               android:layout_marginRight="17dp"
-              android:layout_marginBottom="167dp"
+              android:layout_marginBottom="150dp"
               android:backgroundTint="@color/places_autocomplete_fullscreen_background"
               android:src="@drawable/ic_my_gps" /><![CDATA[
 

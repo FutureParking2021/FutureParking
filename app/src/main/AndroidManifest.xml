@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.future_parking">
+    package="com.example.future_parking"
+    >
 
     <meta-data
         android:name="com.google.android.gms.version"
@@ -12,6 +13,10 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+
+
+
 
     <application
         android:allowBackup="true"
@@ -40,11 +45,8 @@
         <activity android:name=".MainActivity" />
 
         <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBtpCR42KuS-R10e52uqAILezRZ7ixHQZA" />
+            android:value="AIzaSyDex92P6vID6eYFpOj2LPDxwI236yiuSrQ" />
 
         <service
             android:name=".LocationService"
@@ -52,6 +54,12 @@
             android:exported="false"
             android:foregroundServiceType="location"
             android:stopWithTask="false" />
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+
     </application>
 
 </manifest>
