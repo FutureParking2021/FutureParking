@@ -20,10 +20,13 @@ public class Parking {
 
     }
 
-
+    public Parking(ParkingId parkingId, Location location) {
+        this.parkingId = parkingId;
+        this.location = location;
+    }
 
     public Parking(ParkingId parkingId, String type, String name, Boolean active, Date createdTimestamp, CreatedBy createdBy,
-                        Location location, Map<String,Object> itemAttributes) {
+                   Location location, Map<String,Object> itemAttributes) {
         super();
         this.parkingId = parkingId;
         this.type = type;

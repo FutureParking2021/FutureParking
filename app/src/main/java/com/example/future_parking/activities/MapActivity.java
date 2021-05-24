@@ -15,17 +15,20 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Icon;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.telephony.ims.ImsMmTelManager;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,12 +44,23 @@ import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.model.TransitDetail;
 import com.akexorcist.googledirection.util.DirectionConverter;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 
 import com.example.future_parking.LocationService;
 import com.example.future_parking.R;
 import com.example.future_parking.classes.Account;
 import com.example.future_parking.classes.GeoLocation;
+import com.example.future_parking.classes.Operations;
+import com.example.future_parking.classes.Parking;
 import com.example.future_parking.uttils.MyLoc;
 
 import com.google.android.gms.common.api.GoogleApi;
@@ -73,9 +87,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.math.MathUtils;
 import com.google.gson.Gson;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonIOException;
 import com.google.maps.android.SphericalUtil;
 
 import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -143,6 +163,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private double lastLng;
     private TextView map_BTN_start_lat, map_BTN_start_lng;
     private ArrayList<Marker> markerList = new ArrayList<>();
+    private String email, role;
     //////////////////////////variables////////////////
 
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
@@ -173,6 +194,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        email = getIntent().getStringExtra("EMAIL");
+        role = getIntent().getStringExtra("ROLE");
         findViews();
         askLocationPermissions();
         init();
@@ -396,34 +419,35 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
         mMap.setMyLocationEnabled(true);
-        LatLng roshain = new LatLng(32.0834782, 34.9818944);
-        myMarker = mMap.addMarker(new MarkerOptions()
-                .position(roshain)
-                .title("parking"));
-        markerList.add(myMarker);
-
-        LatLng ashdod = new LatLng(31.801447, 34.643497);
-        myMarker = mMap.addMarker(new MarkerOptions()
-                .position(ashdod)
-                .title("parking"));
-        markerList.add(myMarker);
-
-        LatLng telaviv = new LatLng(32.109333, 34.855499);
-        myMarker = mMap.addMarker(new MarkerOptions()
-                .position(telaviv)
-                .title("parking"));
-        markerList.add(myMarker);
-
-        LatLng ashkelon = new LatLng(31.66926, 34.57149);
-        myMarker = mMap.addMarker(new MarkerOptions()
-                .position(ashkelon)
-                .title("parking"));
-        markerList.add(myMarker);
+        Log.d("gttt","before getting locations");
+        getAllParking();
+//        LatLng roshain = new LatLng(32.0834782, 34.9818944);
+//
+//
+//        LatLng ashdod = new LatLng(31.801447, 34.643497);
+//        myMarker = mMap.addMarker(new MarkerOptions()
+//                .position(ashdod)
+//                .title("parking"));
+//        markerList.add(myMarker);
+//
+//        LatLng telaviv = new LatLng(32.109333, 34.855499);
+//        myMarker = mMap.addMarker(new MarkerOptions()
+//                .position(telaviv)
+//                .title("parking"));
+//        markerList.add(myMarker);
+//
+//        LatLng ashkelon = new LatLng(31.66926, 34.57149);
+//        myMarker = mMap.addMarker(new MarkerOptions()
+//                .position(ashkelon)
+//                .title("parking"));
+//        markerList.add(myMarker);
         mMap.setOnMarkerClickListener(this);
         mMap.animateCamera(CameraUpdateFactory.zoomIn());
 
 
     }
+
+
 
     private void startService() {
         Log.d("stas", "start Service ");
@@ -499,12 +523,172 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public boolean onMarkerClick(Marker marker) {
         Toast.makeText(this,"marker clicked",Toast.LENGTH_SHORT).show();
-        LatLng latLng = marker.getPosition();
-        double dist = distanceBykm( marker.getPosition().latitude, marker.getPosition().longitude,location.latitude,location.longitude);
-//        dist = Math.round((dist*100)/100);
+        marker.getTag();
+        double dist = distanceBykm(marker.getPosition().latitude, marker.getPosition().longitude,location.latitude,location.longitude);
         BigDecimal bd = BigDecimal.valueOf(dist);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         map_LBL_distance.setText(bd.doubleValue() + " km");
+        showAlertDialog();
         return false;
+    }
+
+    private void showAlertDialog() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(MapActivity.this);
+        builder1.setMessage("Are you sure you want to enter to parking?");
+        builder1.setCancelable(true);
+        Log.d("qttt","role is " + role);
+        builder1.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if(role.equals("PLAYER")){
+                            Log.d("qttt","role is player");
+                            enterParking();
+                        }else{
+                            Toast.makeText(MapActivity.this,"Only PLAYER can enter paking",Toast.LENGTH_SHORT).show();
+                            Log.d("qttt","role is not PLAYER " + role);
+
+                        }
+                    }
+                });
+
+        builder1.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+    }
+
+
+
+
+    private void enterParking() {
+        Log.d("qttt","enter to park");
+        String url = "http://192.168.1.211:8010/twins/operations?page=0&size=30";
+        JSONObject js = new JSONObject();
+        JSONObject jsItem = new JSONObject();
+        JSONObject jsItemId = new JSONObject();
+        JSONObject jsInvokedBy = new JSONObject();
+        JSONObject jsUserId = new JSONObject();
+        JSONObject jsOperationAtt = new JSONObject();
+
+        try {
+            js.put("type","enterParking");
+            jsItemId.put("space","2021b.stanislav.krot");
+            jsItemId.put("id","abc");
+            jsItem.put("itemId",jsItemId);
+            js.put("item",jsItem);
+
+            jsUserId.put("space","2021b.stanislav.krot");
+            jsUserId.put("email",email);
+            jsInvokedBy.put("userId",jsUserId);
+            js.put("invokedBy",jsInvokedBy);
+
+            js.put("operationAttributes",jsOperationAtt);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(
+                Request.Method.POST, url, js,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("stas10", response.toString() + " i am queen");
+                        Toast.makeText(MapActivity.this,"Entered to park successfully!",Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("stas12", "Error: " + error.getMessage());
+            }
+        }) {
+            @Override
+            protected Map<String,String> getParams(){
+                Log.d("stas10","getting params");
+                Map<String,String> params = new HashMap<String,String>();
+
+                Log.d("stas10","returned params");
+                return params;
+            }
+            @Override
+            public Map<String,String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+
+                params.put("Content-Type","application/json; charset=utf-8");
+                return params;
+            }
+        };
+
+        Volley.newRequestQueue(this).add(jsonObjReq);
+    }
+
+
+    private void getAllParking() {
+        Log.d("gttt","get parks");
+        String url = "http://192.168.1.211:8010/twins/operations";
+        JSONObject js = new JSONObject();
+        JSONObject jsItem = new JSONObject();
+        JSONObject jsItemId = new JSONObject();
+        JSONObject jsInvokedBy = new JSONObject();
+        JSONObject jsUserId = new JSONObject();
+        JSONObject jsOperationAtt = new JSONObject();
+
+        try {
+            js.put("type","getAllParkingLots");
+            jsItemId.put("space","2021b.stanislav.krot");
+            jsItemId.put("id","abc");
+            jsItem.put("itemId",jsItemId);
+            js.put("item",jsItem);
+
+            jsUserId.put("space","2021b.stanislav.krot");
+            jsUserId.put("email",email);
+            jsInvokedBy.put("userId",jsUserId);
+            js.put("invokedBy",jsInvokedBy);
+
+            js.put("operationAttributes",jsOperationAtt);
+
+//            Gson gson = new Gson();
+//            gson.toJson(new Operations(),)
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonRequest jsonObjReq = new JsonObjectRequest(
+                Request.Method.POST, url, js,
+                new Response.Listener<JSONObject>() {
+
+                    public void onResponse(JSONObject response) {
+                        Log.d("stas10", response.toString() + " i am queen");
+                        Toast.makeText(MapActivity.this,"Entered to park successfully!",Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("stas12", "Error: " + error.getMessage());
+            }
+        }) {
+            @Override
+            protected Map<String,String> getParams(){
+                Log.d("stas10","getting params");
+                Map<String,String> params = new HashMap<String,String>();
+
+                Log.d("stas10","returned params");
+                return params;
+            }
+            @Override
+            public Map<String,String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+
+                params.put("Content-Type","application/json; charset=utf-8");
+                return params;
+            }
+        };
+
+        Volley.newRequestQueue(this).add(jsonObjReq);
     }
 }

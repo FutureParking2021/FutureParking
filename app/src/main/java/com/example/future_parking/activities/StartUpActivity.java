@@ -145,6 +145,8 @@ public class StartUpActivity extends AppCompatActivity {
 
     private void rideActivity() {
         Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+        intent.putExtra("EMAIL", email);
+        intent.putExtra("ROLE", role);
         this.startActivity(intent);
     }
 

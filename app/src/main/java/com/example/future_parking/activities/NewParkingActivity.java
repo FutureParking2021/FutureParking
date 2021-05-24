@@ -79,15 +79,25 @@ public class NewParkingActivity extends AppCompatActivity {
                 GeoLocation geoLocation = new GeoLocation();
                 geoLocation.getAddress(location, getApplicationContext());
                 currentLocation = new Location(location);
-                locationStr = geoLocation.getResult();
-                loc = locationStr.split(",");
-                currentLocation.setLatitude(Double.parseDouble(loc[0]));
-                currentLocation.setLongitude(Double.parseDouble(loc[1]));
+//                locationStr = geoLocation.getResult();
+//                loc = locationStr.split(",");
+//                currentLocation.setLatitude(Double.parseDouble(loc[0]));
+//                currentLocation.setLongitude(Double.parseDouble(loc[1]));
+                currentLocation.setLatitude(0);
+                currentLocation.setLongitude(0);
+
                 active = NewParking_EDT_active.getText().toString();
-                name = NewParking_EDT_name.getText().toString();
+//                name = NewParking_EDT_name.getText().toString();
                 type = NewParking_EDT_type.getText().toString();
-                park = createPark();
-                postRequest();
+                cb = new CreatedBy(new UserId("2021b.stanislav.krot",email));
+//                park = createPark();
+                for (int i = 1; i< 16;i++){
+                    itemAtt.put("numOfParking",1);
+                    itemAtt.put("priceOfParking",i+10);
+                    postRequest(new Parking(new ParkingId(),"parkingLot","name" + i,true,date,cb,currentLocation,itemAtt));
+
+                }
+
 
             }
         }
@@ -95,14 +105,19 @@ public class NewParkingActivity extends AppCompatActivity {
 
     private Parking createPark() {
         cb = new CreatedBy(new UserId("2021b.stanislav.krot",email));
-        itemAtt.put("numOfParking",NewParking_EDT_parkNum.getText().toString());
-        itemAtt.put("priceOfParking",NewParking_EDT_pricePerQuarterHour.getText().toString());
+        int price, numOfPark;
+        price = Integer.parseInt(NewParking_EDT_parkNum.getText().toString());
+        numOfPark = Integer.parseInt(NewParking_EDT_pricePerQuarterHour.getText().toString());
+        itemAtt.put("numOfParking",price);
+        itemAtt.put("priceOfParking",numOfPark);
 
         return new Parking(new ParkingId(),"parkingLot",name,Boolean.parseBoolean(active),date,cb,currentLocation,itemAtt);
+
     }
 
 
-    private void postRequest() {
+    private void postRequest(Parking park) {
+
         String url = "http://192.168.1.211:8010/twins/items/2021b.stanislav.krot/" + email;
         JSONObject js = new JSONObject();
         JSONObject itemJs = new JSONObject();
@@ -117,9 +132,9 @@ public class NewParkingActivity extends AppCompatActivity {
             itemJs.put("id","");
             js.put("itemId", itemJs);
 
-            js.put("type",type);
-            js.put("name",name);
-            js.put("active",active);
+            js.put("type","parkingLot");
+            js.put("name",park.getName());
+            js.put("active",park.getActive());
             js.put("createdTimestamp",date.getTime());
 
             userDetailIdJs.put("space","2021b.stanislav.krot");
