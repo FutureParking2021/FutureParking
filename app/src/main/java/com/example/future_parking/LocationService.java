@@ -23,7 +23,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.future_parking.activities.MapActivity;
 import com.example.future_parking.uttils.MyLoc;
@@ -44,9 +43,9 @@ public class LocationService extends Service {
 
     public static int NOTIFICATION_ID = 153;
     private int lastShownNotificationId = -1;
-    public static String CHANNEL_ID = "com.example.future_parking.CHANNEL_ID_FOREGROUND";
-    public static String MAIN_ACTION = "com.example.future_parking.locationService.action.main";
-
+    public static String CHANNEL_ID = "com.example.ridewithme.CHANNEL_ID_FOREGROUND";
+    public static String MAIN_ACTION = "com.example.ridewithme.locationservice.action.main";
+    private int n;
     public static final String START_FOREGROUND_SERVICE = "START_FOREGROUND_SERVICE";
     public static final String PAUSE_FOREGROUND_SERVICE = "PAUSE_FOREGROUND_SERVICE";
     public static final String STOP_FOREGROUND_SERVICE = "STOP_FOREGROUND_SERVICE";
@@ -64,8 +63,6 @@ public class LocationService extends Service {
             super.onLocationResult(locationResult);
 
             if (locationResult.getLastLocation() != null) {
-                Log.d("pttt", "Location information available.");
-
                 newLocation(locationResult.getLastLocation());
             } else {
                 Log.d("pttt", "Location information isn't available.");
@@ -82,7 +79,6 @@ public class LocationService extends Service {
 
     @Override
     public void onCreate() {
-
         super.onCreate();
     }
 
@@ -109,11 +105,11 @@ public class LocationService extends Service {
     }
 
     private void newLocation(Location lastLocation) {
-        Intent intent = new Intent(MapActivity.BROADCAST_NEW_LOCATION_DETECTED);
+//        Intent intent = new Intent(MapActivity.BROADCAST_NEW_LOCATION_DETECTED);
 
         String json = new Gson().toJson(new MyLoc(lastLocation));
-        intent.putExtra("EXTRA_LOCATION", json);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+//        intent.putExtra("EXTRA_LOCATION", json);
+//        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         notificationBuilder.setContentText("Current speed: " + String.format("%.2f", lastLocation.getSpeed() * 3.6) + " kph");
         final NotificationManager notificationManager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
