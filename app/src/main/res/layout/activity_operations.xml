@@ -19,12 +19,12 @@
 
 
     <Button
-        android:id="@+id/operations_BTN_invoke"
+        android:id="@+id/operations_BTN_exit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="invoke op"
-        android:tag="invoke"
+        android:text="Pay and Exit"
+        android:tag="exit"
     />
 
     <Button
@@ -32,10 +32,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_below="@id/operations_BTN_invoke"
+        android:layout_below="@id/operations_BTN_exit"
         android:text="A-synchronous op"
         android:tag="aSync"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="10dp"
+    />
+    <Button
+        android:id="@+id/operations_BTN_deleteUsers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/operations_BTN_aSync"
+        android:layout_marginTop="10dp"
+        android:text="Delete All Users"
+        android:tag="deleteUsers"
+    />
+
+    <Button
+        android:id="@+id/operations_BTN_deleteItems"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/operations_BTN_deleteUsers"
+        android:text="Delete All Items"
+        android:layout_marginTop="10dp"
+        android:tag="deleteItems"
+    />
+    <Button
+        android:id="@+id/operations_BTN_deleteOperations"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/operations_BTN_deleteItems"
+        android:text="Delete All Operations"
+        android:layout_marginTop="10dp"
+        android:tag="deleteOperations"
     />
 
 

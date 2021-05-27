@@ -45,22 +45,36 @@ import com.akexorcist.googledirection.model.TransitDetail;
 import com.akexorcist.googledirection.util.DirectionConverter;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.future_parking.LocationService;
 import com.example.future_parking.R;
 import com.example.future_parking.classes.Account;
+import com.example.future_parking.classes.CustomJsonRequest;
+import com.example.future_parking.classes.CustomJsonRequest;
 import com.example.future_parking.classes.GeoLocation;
 import com.example.future_parking.classes.Operations;
 import com.example.future_parking.classes.Parking;
+import com.example.future_parking.classes.ParkingId;
 import com.example.future_parking.uttils.MyLoc;
 
 import com.google.android.gms.common.api.GoogleApi;
@@ -88,7 +102,10 @@ import com.google.android.material.math.MathUtils;
 import com.google.gson.Gson;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.maps.android.SphericalUtil;
 
 import android.util.Log;
@@ -97,6 +114,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
@@ -111,6 +130,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.xml.transform.ErrorListener;
+import javax.xml.transform.TransformerException;
 
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
@@ -184,6 +206,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
     };
+    private Object JSONArray;
 
     private void saveCurrentLoc(LatLng location) {
         lastLat = location.latitude;
@@ -290,9 +313,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             }
         }else if (map_MAP_sort.getText().equals("Price")){
-
+            for(int i = 0; i < markerList.size(); i++) {
+                if (Integer.parseInt(markerList.get(i).getTitle()) > 25) {
+                    markerList.get(i).setVisible(false);
+                } else {
+                    markerList.get(i).setVisible(true);
+                }
+            }
         }else if (map_MAP_sort.getText().equals("Free Parks")){
-
+            for(int i = 0; i < markerList.size(); i++) {
+//                if (markerList. > 10) {
+//                    markerList.get(i).setVisible(false);
+//
+//                } else {
+//                    markerList.get(i).setVisible(true);
+//                }
+            }
         }
     }
 
@@ -421,26 +457,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.setMyLocationEnabled(true);
         Log.d("gttt","before getting locations");
         getAllParking();
-//        LatLng roshain = new LatLng(32.0834782, 34.9818944);
-//
-//
-//        LatLng ashdod = new LatLng(31.801447, 34.643497);
-//        myMarker = mMap.addMarker(new MarkerOptions()
-//                .position(ashdod)
-//                .title("parking"));
-//        markerList.add(myMarker);
-//
-//        LatLng telaviv = new LatLng(32.109333, 34.855499);
-//        myMarker = mMap.addMarker(new MarkerOptions()
-//                .position(telaviv)
-//                .title("parking"));
-//        markerList.add(myMarker);
-//
-//        LatLng ashkelon = new LatLng(31.66926, 34.57149);
-//        myMarker = mMap.addMarker(new MarkerOptions()
-//                .position(ashkelon)
-//                .title("parking"));
-//        markerList.add(myMarker);
         mMap.setOnMarkerClickListener(this);
         mMap.animateCamera(CameraUpdateFactory.zoomIn());
 
@@ -528,11 +544,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         BigDecimal bd = BigDecimal.valueOf(dist);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         map_LBL_distance.setText(bd.doubleValue() + " km");
-        showAlertDialog();
+        showAlertDialog(marker.getTag().toString());
         return false;
     }
 
-    private void showAlertDialog() {
+    private void showAlertDialog(String lotId) {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(MapActivity.this);
         builder1.setMessage("Are you sure you want to enter to parking?");
         builder1.setCancelable(true);
@@ -543,7 +559,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     public void onClick(DialogInterface dialog, int id) {
                         if(role.equals("PLAYER")){
                             Log.d("qttt","role is player");
-                            enterParking();
+//                            String spotId;
+                            searchParkingSpace(lotId);
+//                            enterParking(spotId);
                         }else{
                             Toast.makeText(MapActivity.this,"Only PLAYER can enter paking",Toast.LENGTH_SHORT).show();
                             Log.d("qttt","role is not PLAYER " + role);
@@ -565,11 +583,92 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
+    private void searchParkingSpace(String lotId){
+        String url = "http://192.168.1.211:8010/twins/operations?page=0&size=1";
+        JSONObject js = new JSONObject();
+        JSONObject jsItem = new JSONObject();
+        JSONObject jsItemId = new JSONObject();
+        JSONObject jsInvokedBy = new JSONObject();
+        JSONObject jsUserId = new JSONObject();
+        JSONObject jsOperationAtt = new JSONObject();
+//        Log.d("jttt","id " + lotId);
+        try {
+            js.put("type","searchParking");
+            jsItemId.put("space","2021b.stanislav.krot");
+            jsItemId.put("id",lotId);
+            jsItem.put("itemId",jsItemId);
+            js.put("item",jsItem);
+
+            jsUserId.put("space","2021b.stanislav.krot");
+            jsUserId.put("email",email);
+            jsInvokedBy.put("userId",jsUserId);
+            js.put("invokedBy",jsInvokedBy);
+
+            js.put("operationAttributes",jsOperationAtt);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        CustomJsonRequest customJsonRequest = new CustomJsonRequest(Request.Method.POST, url, js, new Response.Listener<org.json.JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                Log.d("jttt", response.toString() + " i am queen");
+                Log.d("jttt", "entering to park up! ");
+                Toast.makeText(MapActivity.this,"Parking lot is full!",Toast.LENGTH_SHORT).show();
+
+                if(response.length() == 0){
+                    Log.d("jttt", "dont have any parks! ");
+                    Toast.makeText(MapActivity.this,"Parking lot is full!",Toast.LENGTH_SHORT).show();
+                }else {
+                    try {
+                        Log.d("jttt", "entering to park! ");
+
+                        JSONObject objectJs = response.getJSONObject(0);
+                        JSONObject itemJs = objectJs.getJSONObject("itemId");
+                        String parkingSpotId = itemJs.getString("id");
+                        Log.d("jttt", "entering to park! " + parkingSpotId);
+                        enterParking(parkingSpotId);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
 
-    private void enterParking() {
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("stas12", "Error: " + error.getMessage());
+                try {
+                    byte[] htmlBodyBytes = error.networkResponse.data;
+                    Log.e("stasptt", new String(htmlBodyBytes), error);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+        }) {
+            @Override
+            protected Map<String,String> getParams(){
+                Log.d("stas10","getting params");
+                Map<String,String> params = new HashMap<String,String>();
+
+                Log.d("stas10","returned params");
+                return params;
+            }
+            @Override
+            public Map<String,String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+
+                params.put("Content-Type","application/json; charset=utf-8");
+                return params;
+            }
+        };
+
+        Volley.newRequestQueue(this).add(customJsonRequest);
+    }
+
+    private void enterParking(String parkingSpotId) {
         Log.d("qttt","enter to park");
-        String url = "http://192.168.1.211:8010/twins/operations?page=0&size=30";
+        String url = "http://192.168.1.211:8010/twins/operations?page=0&size=1";
         JSONObject js = new JSONObject();
         JSONObject jsItem = new JSONObject();
         JSONObject jsItemId = new JSONObject();
@@ -580,7 +679,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         try {
             js.put("type","enterParking");
             jsItemId.put("space","2021b.stanislav.krot");
-            jsItemId.put("id","abc");
+            jsItemId.put("id",parkingSpotId);
             jsItem.put("itemId",jsItemId);
             js.put("item",jsItem);
 
@@ -598,13 +697,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("stas10", response.toString() + " i am queen");
+                        Log.d("jttt", response.toString() + " i am queen");
                         Toast.makeText(MapActivity.this,"Entered to park successfully!",Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("stas12", "Error: " + error.getMessage());
+                try {
+                    byte[] htmlBodyBytes = error.networkResponse.data;
+                    Log.e("stasptt", new String(htmlBodyBytes), error);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
         }) {
             @Override
@@ -629,7 +734,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
     private void getAllParking() {
-        Log.d("gttt","get parks");
+
+        Log.d("gttt", "get parks");
         String url = "http://192.168.1.211:8010/twins/operations";
         JSONObject js = new JSONObject();
         JSONObject jsItem = new JSONObject();
@@ -641,7 +747,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         try {
             js.put("type","getAllParkingLots");
             jsItemId.put("space","2021b.stanislav.krot");
-            jsItemId.put("id","abc");
+            jsItemId.put("id","");
             jsItem.put("itemId",jsItemId);
             js.put("item",jsItem);
 
@@ -652,43 +758,65 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             js.put("operationAttributes",jsOperationAtt);
 
-//            Gson gson = new Gson();
-//            gson.toJson(new Operations(),)
+            CustomJsonRequest customJsonRequest = new CustomJsonRequest(Request.Method.POST, url, js, new Response.Listener<org.json.JSONArray>() {
+                @Override
+                public void onResponse(org.json.JSONArray response) {
+                    Log.d("jttt","length " + response.length());
+                    for(int i=0;i<response.length();i++){
+                        try {
+                            JSONObject js = response.getJSONObject(i);
+                            JSONObject itemJs = js.getJSONObject("itemId");
+                            String itemId = itemJs.getString("id");
+                            JSONObject itemLocation = js.getJSONObject("location");
+                            double lat = itemLocation.getDouble("lat");
+                            double lng = itemLocation.getDouble("lng");
+//                            JSONObject itemAtt = js.getJSONObject("operationAttributes");
+//                            int price = itemAtt.getInt("priceOfParking");
+                            Log.d("httt","parameters " + itemId + " lat " + lat + " lng " + lng);
+                            myMarker = mMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(lat,lng))
+                                    .title("parking"));
+                            myMarker.setTag(itemId);
+//                            myMarker.setTitle(price+"");
+                            markerList.add(myMarker);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-        } catch (JSONException e) {
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("stas10", "response error " + error.getMessage());
+                    try {
+                        byte[] htmlBodyBytes = error.networkResponse.data;
+                        Log.e("stasptt", new String(htmlBodyBytes), error);
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }) {
+                @Override
+                protected Map<String,String> getParams(){
+                    Log.d("stas10","getting params");
+                    Map<String,String> params = new HashMap<String,String>();
+
+                    Log.d("stas10","returned params");
+                    return params;
+                }
+                @Override
+                public Map<String,String> getHeaders() throws AuthFailureError {
+                    Map<String,String> params = new HashMap<String,String>();
+
+                    params.put("Content-Type","application/json; charset=utf-8");
+                    return params;
+                }
+            };
+            Volley.newRequestQueue(this).add(customJsonRequest);
+
+        }catch (Exception e){
             e.printStackTrace();
         }
-        JsonRequest jsonObjReq = new JsonObjectRequest(
-                Request.Method.POST, url, js,
-                new Response.Listener<JSONObject>() {
-
-                    public void onResponse(JSONObject response) {
-                        Log.d("stas10", response.toString() + " i am queen");
-                        Toast.makeText(MapActivity.this,"Entered to park successfully!",Toast.LENGTH_SHORT).show();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("stas12", "Error: " + error.getMessage());
-            }
-        }) {
-            @Override
-            protected Map<String,String> getParams(){
-                Log.d("stas10","getting params");
-                Map<String,String> params = new HashMap<String,String>();
-
-                Log.d("stas10","returned params");
-                return params;
-            }
-            @Override
-            public Map<String,String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String,String>();
-
-                params.put("Content-Type","application/json; charset=utf-8");
-                return params;
-            }
-        };
-
-        Volley.newRequestQueue(this).add(jsonObjReq);
     }
 }

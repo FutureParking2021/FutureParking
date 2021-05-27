@@ -79,25 +79,16 @@ public class NewParkingActivity extends AppCompatActivity {
                 GeoLocation geoLocation = new GeoLocation();
                 geoLocation.getAddress(location, getApplicationContext());
                 currentLocation = new Location(location);
-//                locationStr = geoLocation.getResult();
-//                loc = locationStr.split(",");
-//                currentLocation.setLatitude(Double.parseDouble(loc[0]));
-//                currentLocation.setLongitude(Double.parseDouble(loc[1]));
-                currentLocation.setLatitude(0);
-                currentLocation.setLongitude(0);
-
+                locationStr = geoLocation.getResult();
+                loc = locationStr.split(",");
+                currentLocation.setLatitude(Double.parseDouble(loc[0]));
+                currentLocation.setLongitude(Double.parseDouble(loc[1]));
                 active = NewParking_EDT_active.getText().toString();
-//                name = NewParking_EDT_name.getText().toString();
+                name = NewParking_EDT_name.getText().toString();
                 type = NewParking_EDT_type.getText().toString();
                 cb = new CreatedBy(new UserId("2021b.stanislav.krot",email));
-//                park = createPark();
-                for (int i = 1; i< 16;i++){
-                    itemAtt.put("numOfParking",1);
-                    itemAtt.put("priceOfParking",i+10);
-                    postRequest(new Parking(new ParkingId(),"parkingLot","name" + i,true,date,cb,currentLocation,itemAtt));
-
-                }
-
+                park = createPark();
+                postRequest(park);
 
             }
         }
