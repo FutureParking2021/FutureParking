@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.SettingsActivity"
     android:orientation="vertical"
+
     >
     <TextView
         android:id="@+id/settings_LBL_Userdata"

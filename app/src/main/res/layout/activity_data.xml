@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.DataActivity"
     android:orientation="vertical"
+    android:background="@drawable/park"
     >
 
     <TextView
@@ -14,8 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:text="@string/change_your_data"
-        android:textColor="#031DB1"
-        android:textSize="30sp"
+        android:textColor="@color/white"
+        android:textSize="50sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="75dp"
@@ -26,6 +27,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="New name"
+        android:textColorHint="@color/white"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_above="@id/data_EDT_password"
         />
 
@@ -33,20 +37,25 @@
         android:id="@+id/data_EDT_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColorHint="@color/white"
         android:hint="New password"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_centerInParent="true"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="35dp"
+        android:layout_marginTop="30dp"
         />
 
     <EditText
         android:id="@+id/data_EDT_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textColorHint="@color/white"
         android:layout_below="@id/data_EDT_password"
         android:hint="New email"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="50dp"
         />
 
 
