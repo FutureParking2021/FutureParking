@@ -2,12 +2,15 @@ package com.example.future_parking.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -27,14 +30,12 @@ import java.util.Map;
 
 public class DataActivity extends AppCompatActivity {
     private Button data_BTN_save;
-
-    private Account account;
-    String newName;
-    String newEmail;
+    private String newName;
+    private String newEmail;
     private EditText data_EDT_name;
-    private EditText data_EDT_avatar;
     private EditText data_EDT_email;
-    String newAvatar;
+    private TextView data_LBL_role;
+    private String newRole;
     private String role;
     private String email;
     private String username;
@@ -46,27 +47,46 @@ public class DataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_data);
         findViews();
         data_BTN_save.setOnClickListener(save);
+        data_LBL_role.setOnClickListener(save);
         email = getIntent().getStringExtra("EMAIL");
         role = getIntent().getStringExtra("ROLE");
         Log.d("username3", "role= " + role);
         username = getIntent().getStringExtra("USERNAME");
         avatar = getIntent().getStringExtra("USERNAME");
+        data_LBL_role.setText("Current Role: " + role);
     }
 
     private View.OnClickListener save = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            if(view.getTag().toString().equals("role")){
+                String[] units = {"PLAYER", "MANAGER","ADMIN"};
+                unitSelection(units);
+            }
             updateData();
         }
     };
 
+    private void unitSelection(String[] choose) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose an option");
+        builder.setItems(choose, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                role = choose[which];
+//                Log.d("role","role is " + name);
+                data_LBL_role.setText(role);
+            }
+        });
+        builder.show();
+    }
 
     private void updateData() {
+
         Log.d("stas", "entered updating");
 //        String userID = firebaseAuth.getCurrentUser().getUid();
 
         newName = data_EDT_name.getText().toString();
-        newAvatar = data_EDT_avatar.getText().toString();
         newEmail = data_EDT_email.getText().toString();;
 
         if (!validate()) {
@@ -76,9 +96,6 @@ public class DataActivity extends AppCompatActivity {
         }
         if(newName.isEmpty()){
             newName = username;
-        }
-        if(newAvatar.isEmpty()){
-            newAvatar = avatar;
         }
         if(newEmail.isEmpty()){
             newEmail = email;
@@ -103,13 +120,6 @@ public class DataActivity extends AppCompatActivity {
             valid = false;
         } else{
             data_EDT_email.setError(null);
-        }
-
-        if (!newAvatar.isEmpty() && (newAvatar.length() < 1)) {
-            data_EDT_avatar.setError("at least 1 character");
-            valid = false;
-        } else {
-            data_EDT_avatar.setError(null);
         }
 
         return valid;
@@ -139,7 +149,7 @@ public class DataActivity extends AppCompatActivity {
             js.put("userId",jsUid);
             js.put("role",role);
             js.put("username", newName);
-            js.put("avatar",newAvatar);
+            js.put("avatar",avatar);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -190,8 +200,8 @@ public class DataActivity extends AppCompatActivity {
 
     private void findViews() {
         data_EDT_name = findViewById(R.id.data_EDT_name);
-        data_EDT_avatar = findViewById(R.id.data_EDT_avatar);
         data_EDT_email = findViewById(R.id.data_EDT_email);
         data_BTN_save = findViewById(R.id.data_BTN_save);
+        data_LBL_role = findViewById(R.id.data_LBL_role);
     }
 }

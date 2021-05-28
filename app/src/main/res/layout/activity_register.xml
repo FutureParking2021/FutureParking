@@ -30,10 +30,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:textSize="50sp"
+            android:textSize="40sp"
             android:textColor="@color/black"
             android:text="Future Parking"
             android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
             />
 
         <!--  Name Label -->
@@ -47,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
-                android:layout_marginTop="150dp"
+                android:layout_marginTop="80dp"
                 android:hint="Full Name" />
         </com.google.android.material.textfield.TextInputLayout>
 

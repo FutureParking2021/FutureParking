@@ -29,11 +29,9 @@ public class StartUpActivity extends AppCompatActivity {
     private MaterialButton Start_BTN_bikeRide;
     private MaterialButton Start_BTN_settings;
     private MaterialButton Start_BTN_logout;
-
-
-  private MaterialButton Start_BTN_makePark;
-  private MaterialButton Start_BTN_updatePark;
-  private MaterialButton Start_BTN_operations;
+    private MaterialButton Start_BTN_makePark;
+    private MaterialButton Start_BTN_updatePark;
+    private MaterialButton Start_BTN_operations;
     private String role;
     private String email;
     private String username;
@@ -84,6 +82,7 @@ public class StartUpActivity extends AppCompatActivity {
             rideActivity();
         }
         if(view.getTag().toString().equals("make")){
+            Log.d("httt","in make parking");
             if(role.equals("MANAGER")){
                 makeParkingActivity();
             } else {
@@ -99,21 +98,15 @@ public class StartUpActivity extends AppCompatActivity {
         }
         if(view.getTag().toString().equals("operations")){
             operationsActivity();
+            finish();
         }
         if(view.getTag().toString().equals("settings")){
             settingsActivity();
+        }if(view.getTag().toString().equals("logout")){
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            this.startActivity(intent);
+            finish();
         }
-        if(view.getTag().toString().equals("logout"))
-        {
-            logoutFromFB();
-        }
-    }
-
-    private void logoutFromFB() {
-//        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getApplicationContext(),LoginActivity.class));
-        Toast.makeText(getApplicationContext(),"Sign out From Ride With Me App" , Toast.LENGTH_SHORT);
-        finish();
     }
 
     private void settingsActivity() {
@@ -139,6 +132,7 @@ public class StartUpActivity extends AppCompatActivity {
     }
 
     private void makeParkingActivity() {
+        Log.d("httt","before entering activity");
         Intent intent = new Intent(getApplicationContext(), NewParkingActivity.class);
         intent.putExtra("EMAIL", email);
         this.startActivity(intent);

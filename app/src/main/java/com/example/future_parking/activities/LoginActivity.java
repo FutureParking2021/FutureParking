@@ -34,7 +34,6 @@ import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText login_EDT_email;
-    private EditText login_EDT_password;
     private MaterialButton login_BTN_login;
     private MaterialButton login_BTN_register;
     private TextView login_LBL_errorMessage;
@@ -49,39 +48,19 @@ public class LoginActivity extends AppCompatActivity {
         login_PGB_pgb.setVisibility(View.GONE);
         login_BTN_login.setOnClickListener(fillAccount);
         login_BTN_register.setOnClickListener(fillAccount);
-
-//        Glide
-//                .with(this)
-//                .load(R.drawable.parking)
-//                .centerCrop()
-//                .into(login_IMG_background);
-    }
-
-
-
-
-
-
-    boolean isEmpty(EditText text) {
-        CharSequence str = text.getText().toString();
-        return TextUtils.isEmpty(str);
-    }
-    boolean isEmail(EditText text) {
-        CharSequence email = text.getText().toString();
-        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
     private void onLoginSuccess(Account c, Intent intent) {
-
+        login_PGB_pgb.setVisibility(View.VISIBLE);
         this.startActivity(intent);
-        Toast.makeText(getBaseContext(), "Connected Successfully " , Toast.LENGTH_LONG).show();
-        finish();
+        Toast.makeText(getBaseContext(), "Connected Successfully " , Toast.LENGTH_SHORT).show();
+        this.finish();
     }
 
     private void getRequest() {
         RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
         String url = "http://192.168.1.211:8010/twins/users/login/2021b.stanislav.krot/" + login_EDT_email.getText().toString();
-        JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject >() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject >() {
             @Override
             public void onResponse(JSONObject   response) {
                 try{
@@ -102,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("ptt","role is " + c.getRole());
                         intent.putExtra("AVATAR", c.getAvatar());
                         intent.putExtra("USERNAME", c.getUsername());
+
                         onLoginSuccess(c, intent);
                     }
                 }catch (JSONException e){
@@ -111,9 +91,16 @@ public class LoginActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                onLoginFailed();
             }
         });
-        requestQueue.add(jsonArrayRequest);
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void onLoginFailed() {
+        Toast.makeText(getBaseContext(), "login failed -> EMAIL is incorrect " , Toast.LENGTH_LONG).show();
+        login_PGB_pgb.setVisibility(View.GONE);
+
     }
 
     private View.OnClickListener fillAccount = new View.OnClickListener() {
@@ -142,7 +129,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void findViews() {
         login_EDT_email = findViewById(R.id.login_EDT_email);
-        login_EDT_password = findViewById(R.id.login_EDT_password);
         login_BTN_login = findViewById(R.id.login_BTN_login);
         login_BTN_register = findViewById(R.id.login_BTN_register);
         login_LBL_errorMessage = findViewById(R.id.login_LBL_errorMessage);

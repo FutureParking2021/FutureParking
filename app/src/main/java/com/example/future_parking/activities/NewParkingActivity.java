@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -38,7 +40,6 @@ public class NewParkingActivity extends AppCompatActivity {
     private EditText NewParking_EDT_Location;
     private EditText NewParking_EDT_active;
     private EditText NewParking_EDT_name;
-    private EditText NewParking_EDT_type;
     private EditText NewParking_EDT_parkNum;
     private EditText NewParking_EDT_pricePerQuarterHour;
     private String type;
@@ -67,7 +68,6 @@ public class NewParkingActivity extends AppCompatActivity {
         NewParking_EDT_Location.setOnClickListener(textClicked);
         NewParking_EDT_active.setOnClickListener(textClicked);
         NewParking_EDT_name.setOnClickListener(textClicked);
-        NewParking_EDT_type.setOnClickListener(textClicked);
         NewParking_EDT_pricePerQuarterHour.setOnClickListener(textClicked);
         NewParking_EDT_parkNum.setOnClickListener(textClicked);
     }
@@ -85,11 +85,9 @@ public class NewParkingActivity extends AppCompatActivity {
                 currentLocation.setLongitude(Double.parseDouble(loc[1]));
                 active = NewParking_EDT_active.getText().toString();
                 name = NewParking_EDT_name.getText().toString();
-                type = NewParking_EDT_type.getText().toString();
                 cb = new CreatedBy(new UserId("2021b.stanislav.krot",email));
                 park = createPark();
                 postRequest(park);
-
             }
         }
     };
@@ -153,10 +151,13 @@ public class NewParkingActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("stas10", response.toString() + " i am queen");
+                        Toast.makeText(NewParkingActivity.this,"Park created successfully",Toast.LENGTH_SHORT);
+                        finish();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(NewParkingActivity.this,"Unable to create parking lot",Toast.LENGTH_SHORT);
                 Log.d("stas12", "Error: " + error.getMessage());
                 try {
                     byte[] htmlBodyBytes = error.networkResponse.data;
@@ -205,7 +206,6 @@ public class NewParkingActivity extends AppCompatActivity {
         NewParking_EDT_Location = findViewById(R.id.NewParking_EDT_Location);
         NewParking_EDT_active = findViewById(R.id.NewParking_EDT_active);
         NewParking_EDT_name = findViewById(R.id.NewParking_EDT_name);
-        NewParking_EDT_type = findViewById(R.id.NewParking_EDT_type);
         NewParking_EDT_parkNum = findViewById(R.id.NewParking_EDT_parkNum);
         NewParking_EDT_pricePerQuarterHour = findViewById(R.id.NewParking_EDT_pricePerQuarterHour);
     }

@@ -19,7 +19,6 @@ import com.google.android.material.button.MaterialButton;
 
 public class MainActivity extends AppCompatActivity {
     private EditText login_EDT_email;
-    private EditText login_EDT_password;
     private MaterialButton login_BTN_login;
     private MaterialButton login_BTN_register;
     private TextView login_LBL_errorMessage;
@@ -41,50 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    boolean isEmpty(EditText text) {
-        CharSequence str = text.getText().toString();
-        return TextUtils.isEmpty(str);
-    }
-    boolean isEmail(EditText text) {
-        CharSequence email = text.getText().toString();
-        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
-    }
 
-    private boolean checkValidLBl(EditText email, EditText password) {
-        if(isEmail(email) == false || isEmpty(email))
-        {
-            email.setError("Enter valid email!");
-            return false;
-        }
-        else if (isEmpty(password) || password.length() < 4 || password.length() > 10  ) {
-            password.setError("between 4 and 10 alphanumeric characters");
-            return false;
-        }
 
-        return  true;
-    }
-
-    private void checkUserValid() {
-        if (checkValidLBl(login_EDT_email, login_EDT_password)) {
-            login_BTN_login.setClickable(true);
-            login_PGB_pgb.setVisibility(View.VISIBLE);
-            String email = login_EDT_email.getText().toString().trim();
-            String password = login_EDT_password.getText().toString().trim();
-            // if data correct loginSuccess else loginFailed
-        }
-
-    }
-
-    private void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "login failed -> username or password is incorrect " , Toast.LENGTH_LONG).show();
-        login_BTN_login.setEnabled(true);
-        login_PGB_pgb.setVisibility(View.GONE);
-
-    }
-
-    private void onLoginSuccess() {
-
-    }
 
 
     private View.OnClickListener fillAccount = new View.OnClickListener() {
@@ -108,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void findViews() {
         login_EDT_email = findViewById(R.id.login_EDT_email);
-        login_EDT_password = findViewById(R.id.login_EDT_password);
         login_BTN_login = findViewById(R.id.login_BTN_login);
         login_BTN_register = findViewById(R.id.login_BTN_register);
         login_LBL_errorMessage = findViewById(R.id.login_LBL_errorMessage);

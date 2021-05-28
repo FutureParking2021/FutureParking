@@ -156,6 +156,11 @@ public class OperationsActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(JSONObject response) {
                                 Log.d("jttt", response.toString() + " i am queen");
+                                try {
+                                    Toast.makeText(OperationsActivity.this, "Exit Parking lot successfully and payed  " + response.getDouble("Price"), Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }, new Response.ErrorListener() {
                     @Override

@@ -62,19 +62,7 @@
                 android:layout_margin="8dp"
                 android:ems="10"
                 android:hint="Email"
-                android:inputType="textPassword"
                 android:maxLines="1"
-                android:padding="8dp" />
-
-            <EditText
-                android:id="@+id/login_EDT_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:digits="QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword"
                 android:padding="8dp" />
 
             <com.google.android.material.button.MaterialButton

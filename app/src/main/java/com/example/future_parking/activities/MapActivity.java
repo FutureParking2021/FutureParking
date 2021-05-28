@@ -186,6 +186,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private TextView map_BTN_start_lat, map_BTN_start_lng;
     private ArrayList<Marker> markerList = new ArrayList<>();
     private String email, role;
+    private String parkName;
+    private int pricePark;
+    private String userSort;
     //////////////////////////variables////////////////
 
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
@@ -206,9 +209,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
     };
-    private Object JSONArray;
 
-    private void saveCurrentLoc(LatLng location) {
+        private void saveCurrentLoc(LatLng location) {
         lastLat = location.latitude;
         lastLng = location.longitude;
     }
@@ -295,6 +297,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             unitSelection(units);
             Log.d("stas", "sort by " + sortBy);
         }else if (view.getTag().toString().equals("show")){
+            Toast.makeText(MapActivity.this,"Map Updated",Toast.LENGTH_SHORT);
             filterMarkers();
 
 
@@ -304,9 +307,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void filterMarkers() {
         if(map_MAP_sort.getText().equals("Distance")){
+            Log.d("lttt", userSort);
             for(int i = 0; i < markerList.size(); i++){
                 LatLng pos = markerList.get(i).getPosition();
-                if(distanceBykm(pos.latitude, pos.longitude, location.latitude,location.longitude) > 10){
+                if(distanceBykm(pos.latitude, pos.longitude, location.latitude,location.longitude) > Double.parseDouble(userSort)){
                     markerList.get(i).setVisible(false);
                 }else{
                     markerList.get(i).setVisible(true);
@@ -314,7 +318,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }else if (map_MAP_sort.getText().equals("Price")){
             for(int i = 0; i < markerList.size(); i++) {
-                if (Integer.parseInt(markerList.get(i).getTitle()) > 25) {
+                if (Integer.parseInt(markerList.get(i).getTitle()) > Double.parseDouble(userSort)) {
                     markerList.get(i).setVisible(false);
                 } else {
                     markerList.get(i).setVisible(true);
@@ -335,16 +339,41 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void unitSelection(String[] choose) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Choose an option");
-        builder.setItems(choose, new DialogInterface.OnClickListener() {
+        builder.setItems(choose,new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String ans = choose[which];
-                map_MAP_sort.setText(ans);
+                role = choose[which];
+//                Log.d("role","role is " + name);
+                map_MAP_sort.setText(choose[which]);
             }
         });
+        final EditText input = new EditText(MapActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        builder.setView(input);
+        builder.setPositiveButton("YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+//                        Log.d("lttt", userSort);
+
+                        userSort = input.getText().toString();
+
+                    }
+                });
+
+        builder.setNegativeButton("NO",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
         builder.show();
     }
+
+
 
     private void addPIcWithGlide() {
         Glide
@@ -522,9 +551,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             case LOCATION_PERMISSIONS_REQUEST_CODE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    Toast.makeText(MapActivity.this, "Result code = " + grantResults[0], Toast.LENGTH_SHORT).show();
-
                     // permission was granted,
                 } else {
 
@@ -544,32 +570,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         BigDecimal bd = BigDecimal.valueOf(dist);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         map_LBL_distance.setText(bd.doubleValue() + " km");
-        showAlertDialog(marker.getTag().toString());
+        getSpecificItem(marker.getTag().toString());
         return false;
     }
 
-    private void showAlertDialog(String lotId) {
+    private void showAlertDialog(String lotName, int price,String parkId) {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(MapActivity.this);
-        builder1.setMessage("Are you sure you want to enter to parking?");
+        builder1.setMessage(lotName + ", " + price  + "₪ per 1/4 hour");
         builder1.setCancelable(true);
-        Log.d("qttt","role is " + role);
         builder1.setPositiveButton(
                 "Yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if(role.equals("PLAYER")){
-                            Log.d("qttt","role is player");
-//                            String spotId;
-                            searchParkingSpace(lotId);
-//                            enterParking(spotId);
+                            searchParkingSpace(parkId, dialog);
                         }else{
                             Toast.makeText(MapActivity.this,"Only PLAYER can enter paking",Toast.LENGTH_SHORT).show();
                             Log.d("qttt","role is not PLAYER " + role);
-
+                            dialog.dismiss();
                         }
+                        dialog.dismiss();
                     }
-                });
 
+                });
         builder1.setNegativeButton(
                 "No",
                 new DialogInterface.OnClickListener() {
@@ -577,13 +600,44 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         dialog.cancel();
                     }
                 });
-
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }
 
+    private void getSpecificItem(String ParkId) {
+        RequestQueue requestQueue = Volley.newRequestQueue(MapActivity.this);
+        String url = "http://192.168.1.211:8010/twins/items/2021b.stanislav.krot/" + email + "/2021b.stanislav.krot/" + ParkId ;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject >() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try{
+                    // Loop through the array elements
+                    for(int i=0;i<response.length();i++){
+                        JSONObject jsonItemAtt = response.getJSONObject("itemAttributes");
+                        parkName = response.getString("name");
+                        pricePark = jsonItemAtt.getInt("priceOfParking");
+                        JSONObject itemId = response.getJSONObject("itemId");
+                        String id = itemId.getString("id");
 
-    private void searchParkingSpace(String lotId){
+                        Log.d("shaked","name " + parkName + " price  " + pricePark + " id " + id);
+                        showAlertDialog(parkName,pricePark,id);
+                    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        requestQueue.add(jsonObjectRequest);
+    }
+
+
+
+    private void searchParkingSpace(String lotId, DialogInterface dialog){
         String url = "http://192.168.1.211:8010/twins/operations?page=0&size=1";
         JSONObject js = new JSONObject();
         JSONObject jsItem = new JSONObject();
@@ -613,7 +667,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onResponse(JSONArray response) {
                 Log.d("jttt", response.toString() + " i am queen");
                 Log.d("jttt", "entering to park up! ");
-                Toast.makeText(MapActivity.this,"Parking lot is full!",Toast.LENGTH_SHORT).show();
 
                 if(response.length() == 0){
                     Log.d("jttt", "dont have any parks! ");
