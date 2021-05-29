@@ -49,20 +49,6 @@
         android:tag="role"
         />
 
-    <EditText
-        android:id="@+id/data_EDT_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:textColorHint="@color/white"
-        android:layout_below="@id/data_LBL_role"
-        android:hint="New email"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="50dp"
-        />
-
-
 
     <Button
         android:id="@+id/data_BTN_save"
@@ -72,8 +58,9 @@
         android:textColor="#000000"
         android:backgroundTint="@android:color/darker_gray"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/data_EDT_email"
+        android:layout_below="@+id/data_LBL_role"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="85dp"
+        android:tag="save"
         />
 </RelativeLayout>

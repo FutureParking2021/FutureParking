@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -33,7 +34,6 @@ public class DataActivity extends AppCompatActivity {
     private String newName;
     private String newEmail;
     private EditText data_EDT_name;
-    private EditText data_EDT_email;
     private TextView data_LBL_role;
     private String newRole;
     private String role;
@@ -62,8 +62,9 @@ public class DataActivity extends AppCompatActivity {
             if(view.getTag().toString().equals("role")){
                 String[] units = {"PLAYER", "MANAGER","ADMIN"};
                 unitSelection(units);
+            }else if (view.getTag().toString().equals("save")){
+                updateData();
             }
-            updateData();
         }
     };
 
@@ -87,21 +88,17 @@ public class DataActivity extends AppCompatActivity {
 //        String userID = firebaseAuth.getCurrentUser().getUid();
 
         newName = data_EDT_name.getText().toString();
-        newEmail = data_EDT_email.getText().toString();;
 
         if (!validate()) {
             Log.d("stas", "check if validate");
-            onSignupFailed();
+            onUpdateFailed();
             return;
         }
         if(newName.isEmpty()){
             newName = username;
         }
-        if(newEmail.isEmpty()){
-            newEmail = email;
-        }
         Log.d("stas", "update succssess");
-        onSignupSuccess();
+        onUpdateSuccess();
     }
 
 
@@ -114,26 +111,20 @@ public class DataActivity extends AppCompatActivity {
         } else {
             data_EDT_name.setError(null);
         }
-
-        if (!newEmail.isEmpty() && !Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
-            data_EDT_email.setError("enter a valid email address");
-            valid = false;
-        } else{
-            data_EDT_email.setError(null);
-        }
-
         return valid;
     }
 
-    public void onSignupFailed() {
+    public void onUpdateFailed() {
         Toast.makeText(getBaseContext(), "Update failed", Toast.LENGTH_LONG).show();
         data_BTN_save.setEnabled(true);
     }
 
-    public void onSignupSuccess() {
+    public void onUpdateSuccess() {
         data_BTN_save.setEnabled(true);
+
 //        setResult(RESULT_OK, null);
         putRequest();
+
 //        finish();
     }
 
@@ -158,11 +149,13 @@ public class DataActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+
                         Log.d("stas1put", response.toString() + " i am queen");
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                changeActivity();
                 Log.d("ptt", "Error: " + error.getMessage());
                 try {
                     byte[] htmlBodyBytes = error.networkResponse.data;
@@ -196,11 +189,16 @@ public class DataActivity extends AppCompatActivity {
 
     }
 
+    private void changeActivity() {
+        Intent intent = new Intent(DataActivity.this,LoginActivity.class);
+        Toast.makeText(DataActivity.this,"Data changed successfully!",Toast.LENGTH_SHORT).show();
+        this.startActivity(intent);
+        finish();
+    }
 
 
     private void findViews() {
         data_EDT_name = findViewById(R.id.data_EDT_name);
-        data_EDT_email = findViewById(R.id.data_EDT_email);
         data_BTN_save = findViewById(R.id.data_BTN_save);
         data_LBL_role = findViewById(R.id.data_LBL_role);
     }

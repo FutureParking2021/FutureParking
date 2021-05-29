@@ -100,7 +100,6 @@ public class LoginActivity extends AppCompatActivity {
     private void onLoginFailed() {
         Toast.makeText(getBaseContext(), "login failed -> EMAIL is incorrect " , Toast.LENGTH_LONG).show();
         login_PGB_pgb.setVisibility(View.GONE);
-
     }
 
     private View.OnClickListener fillAccount = new View.OnClickListener() {

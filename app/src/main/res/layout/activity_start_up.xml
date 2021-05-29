@@ -52,7 +52,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
-                            app:srcCompat="@drawable/newparking" />
+                            app:srcCompat="@drawable/newparking"
+                            android:visibility="invisible"
+
+                            />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -69,7 +72,10 @@
                                 android:text="new parking"
                                 android:textColor="@color/white"
                                 android:textSize="20dp"
-                                app:iconTint="#110E15" />
+                                app:iconTint="#110E15"
+                                android:visibility="invisible"
+
+                                />
                         </LinearLayout>
                     </RelativeLayout>
 
@@ -139,7 +145,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/update" />
+                        app:srcCompat="@drawable/update"
+                        android:visibility="invisible"
+                        />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -157,7 +165,10 @@
                             android:text="update parking"
                             android:textColor="@color/black"
                             android:textSize="20dp"
-                            app:iconTint="#110E15" />
+                            app:iconTint="#110E15"
+                            android:visibility="invisible"
+
+                            />
 
 
                     </LinearLayout>
@@ -189,7 +200,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:tag="lets ride"
-                            android:text="Lets ride"
+                            android:text="Lets Park"
                             android:textColor="#0D0C0E"
                             android:textSize="20dp"
                             app:iconTint="#110E15" />

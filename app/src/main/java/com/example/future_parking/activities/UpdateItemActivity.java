@@ -89,6 +89,7 @@ public class UpdateItemActivity extends AppCompatActivity {
             name = UpdateItem_EDT_name.getText().toString();
             type = UpdateItem_EDT_type.getText().toString();
             park = createPark();
+            
             putRequest();
 
         }
@@ -96,10 +97,6 @@ public class UpdateItemActivity extends AppCompatActivity {
 
     private Parking createPark() {
         cb = new CreatedBy(new UserId("2021b.stanislav.krot",email));
-        itemAtt.put("KEY2","message1");
-//        itemAtt.put("KEY2",3);
-//        itemAtt.put("KEY3",true);
-//        itemAtt.put("KEY4",5.3);
         return new Parking(new ParkingId(),type,name,Boolean.parseBoolean(active),date,cb,currentLocation,itemAtt);
     }
 

@@ -247,7 +247,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }else if (map_MAP_sort.getText().equals("Price")){
             for(int i = 0; i < markerList.size(); i++) {
-                if (Integer.parseInt(markerList.get(i).getTitle()) > Double.parseDouble(userSort)) {
+
+                String[] tag = markerList.get(i).getTag().toString().split(",");
+//                Log.d("hggg",""+tag[1]);
+                if (Double.parseDouble(tag[1]) > Double.parseDouble(userSort)) {
                     markerList.get(i).setVisible(false);
                 } else {
                     markerList.get(i).setVisible(true);
@@ -400,8 +403,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
-
-
     private void startService() {
         Log.d("stas", "start Service ");
         actionToService(LocationService.START_FOREGROUND_SERVICE);
@@ -461,14 +462,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted,
                 } else {
-
                     // permission denied
                     Toast.makeText(MapActivity.this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
                 }
             }
         }
     }
-
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -489,7 +488,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if(role.equals("PLAYER")){
-
+                            searchParkingSpace(parkId,dialog);
                         }else{
                             Toast.makeText(MapActivity.this,"Only PLAYER can enter parking",Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
@@ -677,7 +676,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
     private void getAllParking() {
-
         Log.d("gttt", "get parks");
         String url = "http://192.168.1.211:8010/twins/operations";
         JSONObject js = new JSONObject();
@@ -713,10 +711,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             JSONObject itemLocation = js.getJSONObject("location");
                             double lat = itemLocation.getDouble("lat");
                             double lng = itemLocation.getDouble("lng");
+//                            priceOfParking
+                            double price = js.getJSONObject("itemAttributes").getDouble("priceOfParking");
                             myMarker = mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(lat,lng))
                                     .title("parking"));
-                            myMarker.setTag(itemId);
+                            myMarker.setTag(itemId+","+price);
                             markerList.add(myMarker);
                         } catch (JSONException e) {
                             e.printStackTrace();

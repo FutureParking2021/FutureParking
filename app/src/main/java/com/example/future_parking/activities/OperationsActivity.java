@@ -102,8 +102,6 @@ public class OperationsActivity extends AppCompatActivity {
         public void onClick(View view) {
             if(view.getTag().toString().equals("exit")){
                 exitRequest();
-            } else if (view.getTag().toString().equals("aSync")){
-
             }else if (view.getTag().toString().equals("deleteUsers")){
                 deleteRequest("users");
             }else if (view.getTag().toString().equals("deleteItems")){
