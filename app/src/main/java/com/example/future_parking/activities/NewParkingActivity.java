@@ -150,7 +150,7 @@ public class NewParkingActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("stas10", response.toString() + " i am queen");
+                        Log.d("response", "response: " + response.toString());
                         Toast.makeText(NewParkingActivity.this,"Park created successfully",Toast.LENGTH_SHORT);
                         finish();
                     }
@@ -158,7 +158,7 @@ public class NewParkingActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(NewParkingActivity.this,"Unable to create parking lot",Toast.LENGTH_SHORT);
-                Log.d("stas12", "Error: " + error.getMessage());
+                Log.d("response", "Error: " + error.getMessage());
                 try {
                     byte[] htmlBodyBytes = error.networkResponse.data;
                     Log.e("stasptt", new String(htmlBodyBytes), error);

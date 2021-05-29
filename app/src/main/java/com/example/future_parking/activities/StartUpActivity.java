@@ -26,12 +26,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class StartUpActivity extends AppCompatActivity {
-    private MaterialButton Start_BTN_bikeRide;
-    private MaterialButton Start_BTN_settings;
-    private MaterialButton Start_BTN_logout;
-    private MaterialButton Start_BTN_makePark;
-    private MaterialButton Start_BTN_updatePark;
-    private MaterialButton Start_BTN_operations;
+    private MaterialButton start_BTN_park;
+    private MaterialButton start_BTN_settings;
+    private MaterialButton start_BTN_logout;
+    private MaterialButton start_BTN_makePark;
+    private MaterialButton start_BTN_updatePark;
+    private MaterialButton start_BTN_operations;
     private String role;
     private String email;
     private String username;
@@ -52,23 +52,48 @@ public class StartUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_up);
         findViews();
-        Start_BTN_bikeRide.setOnClickListener(buttonClickListener);
-        Start_BTN_makePark.setOnClickListener(buttonClickListener);
-        Start_BTN_updatePark.setOnClickListener(buttonClickListener);
-        Start_BTN_operations.setOnClickListener(buttonClickListener);
-        Start_BTN_settings.setOnClickListener(buttonClickListener);
-        Start_BTN_logout.setOnClickListener(buttonClickListener);
+        start_BTN_park.setOnClickListener(buttonClickListener);
+        start_BTN_makePark.setOnClickListener(buttonClickListener);
+        start_BTN_updatePark.setOnClickListener(buttonClickListener);
+        start_BTN_operations.setOnClickListener(buttonClickListener);
+        start_BTN_settings.setOnClickListener(buttonClickListener);
+        start_BTN_logout.setOnClickListener(buttonClickListener);
         email = getIntent().getStringExtra("EMAIL");
         role = getIntent().getStringExtra("ROLE");
         username = getIntent().getStringExtra("USERNAME");
         avatar = getIntent().getStringExtra("AVATAR");
-
-//        getRequest();
+        checkPermissions();
     }
 
+    private void checkPermissions() {
+        if(role.equals("PLAYER")){
+            start_BTN_park.setVisibility(View.VISIBLE);
+            start_BTN_park.setClickable(true);
+            start_BTN_operations.setVisibility(View.VISIBLE);
+            start_BTN_operations.setClickable(true);
+            start_BTN_makePark.setVisibility(View.INVISIBLE);
+            start_BTN_makePark.setClickable(false);
+            start_BTN_updatePark.setVisibility(View.INVISIBLE);
+            start_BTN_updatePark.setClickable(false);
+        } else if(role.equals("MANAGER")){
+            start_BTN_makePark.setVisibility(View.VISIBLE);
+            start_BTN_makePark.setClickable(true);
+            start_BTN_updatePark.setVisibility(View.VISIBLE);
+            start_BTN_updatePark.setClickable(true);
+            start_BTN_park.setVisibility(View.INVISIBLE);
+            start_BTN_park.setClickable(false);
+            start_BTN_operations.setVisibility(View.INVISIBLE);
+            start_BTN_operations.setClickable(false);
+        } else if (role.equals("ADMIN")){
+            start_BTN_park.setVisibility(View.INVISIBLE);
+            start_BTN_park.setClickable(false);
+            start_BTN_makePark.setVisibility(View.INVISIBLE);
+            start_BTN_makePark.setClickable(false);
+            start_BTN_updatePark.setVisibility(View.INVISIBLE);
+            start_BTN_updatePark.setClickable(false);
+        }
 
-
-
+    }
 
     private View.OnClickListener buttonClickListener = new View.OnClickListener() {
         @Override
@@ -146,11 +171,11 @@ public class StartUpActivity extends AppCompatActivity {
     }
 
     private void findViews(){
-        Start_BTN_bikeRide = findViewById(R.id.Start_BTN_bikeRide);
-        Start_BTN_makePark = findViewById(R.id.Start_BTN_makePark);
-        Start_BTN_updatePark = findViewById(R.id.Start_BTN_updatePark);
-        Start_BTN_operations = findViewById(R.id.Start_BTN_operations);
-        Start_BTN_settings = findViewById(R.id.Start_BTN_settings);
-        Start_BTN_logout = findViewById(R.id.Start_BTN_logout);
+        start_BTN_park = findViewById(R.id.Start_BTN_park);
+        start_BTN_makePark = findViewById(R.id.Start_BTN_makePark);
+        start_BTN_updatePark = findViewById(R.id.Start_BTN_updatePark);
+        start_BTN_operations = findViewById(R.id.Start_BTN_operations);
+        start_BTN_settings = findViewById(R.id.Start_BTN_settings);
+        start_BTN_logout = findViewById(R.id.Start_BTN_logout);
     }
 }

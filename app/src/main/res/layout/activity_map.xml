@@ -44,7 +44,7 @@
                    android:layout_height="match_parent"
                    android:layout_marginLeft="70dp"
                    android:layout_weight="1"
-                    android:text="SORT BY"
+                    android:text="FILTER BY"
                    android:textSize="35sp"
                    android:tag="sort"
                    android:clickable="true"

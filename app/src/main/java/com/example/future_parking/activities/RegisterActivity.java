@@ -98,16 +98,9 @@ public class RegisterActivity extends AppCompatActivity {
         builder.show();
     }
 
-    boolean isEmail(EditText text) {
-        CharSequence email = text.getText().toString();
-        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
-    }
-
     private Account createAccount() {
-
         String name=register_EDT_name.getText().toString();
         String email= register_EDT_email.getText().toString();
-//        String type = register_EDT_role.getText().toString();
         Account user = new Account(email,role,name,"J");
         return  user;
     }
@@ -126,51 +119,10 @@ public class RegisterActivity extends AppCompatActivity {
             fields.put("role", account.getRole());
             fields.put("username", account.getUsername());
             fields.put("avatar", account.getAvatar());
-
-
             postRequest();
-//            getRequest();
             onSignupSuccess();
         }
     }
-
-//    private void getRequest() {
-//        RequestQueue requestQueue = Volley.newRequestQueue(RegisterActivity.this);
-//        String url = "http://192.168.1.211:8080/twins/admin/users/2021b.twins/1@gmail.com";
-//        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-//            @Override
-//            public void onResponse(JSONArray response) {
-//                JSONArray jsonArray = response;
-//                Log.d("json",jsonArray.toString());
-//                try {
-//                    for(int i=0;i<jsonArray.length();i++)
-//                    {
-//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                        JSONObject jsonUserId = jsonObject.getJSONObject("userId");
-//                        String email = jsonUserId.getString("email");
-//                        String role = jsonObject.getString("role");
-//                        String username = jsonObject.getString("username");
-//                        String avatar = jsonObject.getString("avatar");
-//                        Account c = new Account(email,role,username,avatar);
-//                        Log.d("stas5",c.toString());
-//                        alist.add(c);
-//                    }
-//                }
-//                catch (Exception w)
-//                {
-//                    Log.d("stas4", "exception" + w.getMessage());
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.d("stas4", "exception");
-//            }
-//        });
-//        requestQueue.add(jsonArrayRequest);
-//    }
-
-
 
     private void postRequest() {
         String url = "http://192.168.1.211:8010/twins/users/";
@@ -188,38 +140,28 @@ public class RegisterActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("stas1", response.toString() + " i am queen");
+                        Log.d("response", "response: " + response.toString());
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("stas1", "Error: " + error.getMessage());
+                Log.d("response", "Error: " + error.getMessage());
             }
         }) {
             @Override
             protected Map<String,String> getParams(){
-                Log.d("stas1","getting params");
-//                Gson gson = new Gson();
-//                String json = gson.toJson(account);
                 Map<String,String> params = new HashMap<String,String>();
-
-                Log.d("stas1","returned params");
                 return params;
             }
             @Override
             public Map<String,String> getHeaders() throws AuthFailureError{
                 Map<String,String> params = new HashMap<String,String>();
-
                 params.put("Content-Type","application/json; charset=utf-8");
                 return params;
             }
         };
-
         Volley.newRequestQueue(this).add(jsonObjReq);
-
-
     }
-
 
     public void onSignupSuccess() {
         register_BTN_create.setEnabled(true);
@@ -238,8 +180,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         String name = register_EDT_name.getText().toString();
         String email = register_EDT_email.getText().toString();
-//        String type = register_EDT_type.getText().toString();
-
         if (name.isEmpty() || name.length() < 3) {
             register_EDT_name.setError("at least 3 characters");
             valid = false;
@@ -253,14 +193,6 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             register_EDT_email.setError(null);
         }
-
-//        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-//            register_EDT_type.setError("between 4 and 10 alphanumeric characters");
-//            valid = false;
-//        } else {
-//            register_EDT_type.setError(null);
-//        }
-
         return valid;
     }
 

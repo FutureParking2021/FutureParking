@@ -111,20 +111,13 @@ public class LoginActivity extends AppCompatActivity {
     };
 
     private void buttonClicked(View view) {
-
-
         if (view.getTag().toString().equals("login")) {
             accountList = new ArrayList<>();
             getRequest();
-//
-//            }
-
-//            finish();
         } else if ((view.getTag().toString().equals("register"))) {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             this.startActivity(intent);
         }
-
     }
 
     private void findViews() {

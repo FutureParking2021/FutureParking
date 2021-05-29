@@ -6,7 +6,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.Manifest;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,16 +13,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.Icon;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.ims.ImsMmTelManager;
-import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,81 +25,34 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.akexorcist.googledirection.DirectionCallback;
-import com.akexorcist.googledirection.GoogleDirection;
-import com.akexorcist.googledirection.constant.AvoidType;
-import com.akexorcist.googledirection.constant.RequestResult;
-import com.akexorcist.googledirection.constant.TransportMode;
-import com.akexorcist.googledirection.model.Direction;
-import com.akexorcist.googledirection.model.Info;
-import com.akexorcist.googledirection.model.Leg;
-import com.akexorcist.googledirection.model.Route;
-import com.akexorcist.googledirection.model.TransitDetail;
-import com.akexorcist.googledirection.util.DirectionConverter;
-
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.example.future_parking.LocationService;
 import com.example.future_parking.R;
 import com.example.future_parking.classes.Account;
 import com.example.future_parking.classes.CustomJsonRequest;
-import com.example.future_parking.classes.CustomJsonRequest;
-import com.example.future_parking.classes.GeoLocation;
-import com.example.future_parking.classes.Operations;
-import com.example.future_parking.classes.Parking;
-import com.example.future_parking.classes.ParkingId;
 import com.example.future_parking.uttils.MyLoc;
 
-import com.google.android.gms.common.api.GoogleApi;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
-import com.google.android.material.math.MathUtils;
 import com.google.gson.Gson;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.maps.android.SphericalUtil;
 
 import android.util.Log;
 
@@ -114,33 +60,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.Date;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import javax.xml.transform.ErrorListener;
-import javax.xml.transform.TransformerException;
-
-import static java.lang.Math.PI;
 import static java.lang.Math.abs;
-import static java.lang.Math.asin;
-import static java.lang.Math.cos;
-import static java.lang.Math.pow;
-import static java.lang.Math.sin;
-import static java.lang.Math.sqrt;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -204,7 +134,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     saveCurrentLoc(location);
                     sourceLocation = getCompleteAddressString(lastLocation.getLatitude(), lastLocation.getLongitude());
                 } catch (Exception ex) {
-                    Log.d("johny", "onReceive: " + ex.toString());
+                    Log.d("stas", "onReceive: " + ex.toString());
                 }
             }
         }
@@ -229,7 +159,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map_MAP_google_map);
         mapFragment.getMapAsync(this);
         destination = new LatLng(32.166313, 34.843311);
-//        checkUserChoise();
         startService();
     }
 
@@ -239,7 +168,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         calendar = Calendar.getInstance();
         simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         date = simpleDateFormat.format(calendar.getTime());
-        Log.d("johny", "getDateFormat: date = " + date);
+        Log.d("stas", "getDateFormat: date = " + date);
         return date;
     }
 
@@ -258,7 +187,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
                 strAdd = strReturnedAddress.toString();
             } else {
-                Log.d("johny", "No Address returned!");
+                Log.d("stas", "No Address returned!");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -307,7 +236,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void filterMarkers() {
         if(map_MAP_sort.getText().equals("Distance")){
-            Log.d("lttt", userSort);
+            Log.d("stas", userSort);
             for(int i = 0; i < markerList.size(); i++){
                 LatLng pos = markerList.get(i).getPosition();
                 if(distanceBykm(pos.latitude, pos.longitude, location.latitude,location.longitude) > Double.parseDouble(userSort)){
@@ -343,10 +272,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 role = choose[which];
-//                Log.d("role","role is " + name);
                 map_MAP_sort.setText(choose[which]);
             }
         });
+
         final EditText input = new EditText(MapActivity.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -356,10 +285,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         builder.setPositiveButton("YES",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-//                        Log.d("lttt", userSort);
-
                         userSort = input.getText().toString();
-
+                        dialog.cancel();
                     }
                 });
 
@@ -410,24 +337,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private double rad2deg(double rad) {
         return (rad * 180.0 / Math.PI);
-    }
-
-
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        int counter = 0;
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-
-        List<ActivityManager.RunningServiceInfo> runs = manager.getRunningServices(Integer.MAX_VALUE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                counter++;
-            }
-        }
-
-
-        if (counter > 0)
-            return true;
-        return false;
     }
 
     private void findViews() {
@@ -484,7 +393,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
         mMap.setMyLocationEnabled(true);
-        Log.d("gttt","before getting locations");
         getAllParking();
         mMap.setOnMarkerClickListener(this);
         mMap.animateCamera(CameraUpdateFactory.zoomIn());
@@ -518,15 +426,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void actionToService(String action) {
         Intent startIntent = new Intent(this, LocationService.class);
-        Log.d("StartSer", "String = " + action);
+        Log.d("Stas", "String = " + action);
         startIntent.setAction(action);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.d("StartSer", "true = " + action);
+            Log.d("Stas", "true = " + action);
 
             startForegroundService(startIntent);
 
         } else {
-            Log.d("StartSer", "else = " + action);
+            Log.d("Stas", "else = " + action);
 
             startService(startIntent);
         }
@@ -564,8 +472,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Toast.makeText(this,"marker clicked",Toast.LENGTH_SHORT).show();
-        marker.getTag();
         double dist = distanceBykm(marker.getPosition().latitude, marker.getPosition().longitude,location.latitude,location.longitude);
         BigDecimal bd = BigDecimal.valueOf(dist);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
@@ -583,10 +489,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if(role.equals("PLAYER")){
-                            searchParkingSpace(parkId, dialog);
+
                         }else{
-                            Toast.makeText(MapActivity.this,"Only PLAYER can enter paking",Toast.LENGTH_SHORT).show();
-                            Log.d("qttt","role is not PLAYER " + role);
+                            Toast.makeText(MapActivity.this,"Only PLAYER can enter parking",Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
                         dialog.dismiss();
@@ -618,8 +523,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         pricePark = jsonItemAtt.getInt("priceOfParking");
                         JSONObject itemId = response.getJSONObject("itemId");
                         String id = itemId.getString("id");
-
-                        Log.d("shaked","name " + parkName + " price  " + pricePark + " id " + id);
                         showAlertDialog(parkName,pricePark,id);
                     }
                 }catch (JSONException e){
@@ -645,7 +548,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         JSONObject jsInvokedBy = new JSONObject();
         JSONObject jsUserId = new JSONObject();
         JSONObject jsOperationAtt = new JSONObject();
-//        Log.d("jttt","id " + lotId);
         try {
             js.put("type","searchParking");
             jsItemId.put("space","2021b.stanislav.krot");
@@ -665,20 +567,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         CustomJsonRequest customJsonRequest = new CustomJsonRequest(Request.Method.POST, url, js, new Response.Listener<org.json.JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                Log.d("jttt", response.toString() + " i am queen");
-                Log.d("jttt", "entering to park up! ");
-
                 if(response.length() == 0){
-                    Log.d("jttt", "dont have any parks! ");
                     Toast.makeText(MapActivity.this,"Parking lot is full!",Toast.LENGTH_SHORT).show();
                 }else {
                     try {
-                        Log.d("jttt", "entering to park! ");
-
                         JSONObject objectJs = response.getJSONObject(0);
                         JSONObject itemJs = objectJs.getJSONObject("itemId");
                         String parkingSpotId = itemJs.getString("id");
-                        Log.d("jttt", "entering to park! " + parkingSpotId);
                         enterParking(parkingSpotId);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -750,13 +645,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("jttt", response.toString() + " i am queen");
+                        Log.d("response", "Error: " + response.toString());
                         Toast.makeText(MapActivity.this,"Entered to park successfully!",Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("stas12", "Error: " + error.getMessage());
+                Log.d("response", "Error: " + error.getMessage());
                 try {
                     byte[] htmlBodyBytes = error.networkResponse.data;
                     Log.e("stasptt", new String(htmlBodyBytes), error);
@@ -767,21 +662,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }) {
             @Override
             protected Map<String,String> getParams(){
-                Log.d("stas10","getting params");
                 Map<String,String> params = new HashMap<String,String>();
-
-                Log.d("stas10","returned params");
                 return params;
             }
             @Override
             public Map<String,String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String,String>();
-
                 params.put("Content-Type","application/json; charset=utf-8");
                 return params;
             }
         };
-
         Volley.newRequestQueue(this).add(jsonObjReq);
     }
 
@@ -814,7 +704,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             CustomJsonRequest customJsonRequest = new CustomJsonRequest(Request.Method.POST, url, js, new Response.Listener<org.json.JSONArray>() {
                 @Override
                 public void onResponse(org.json.JSONArray response) {
-                    Log.d("jttt","length " + response.length());
+                    Log.d("response", "response: " + response.toString());
                     for(int i=0;i<response.length();i++){
                         try {
                             JSONObject js = response.getJSONObject(i);
@@ -823,14 +713,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             JSONObject itemLocation = js.getJSONObject("location");
                             double lat = itemLocation.getDouble("lat");
                             double lng = itemLocation.getDouble("lng");
-//                            JSONObject itemAtt = js.getJSONObject("operationAttributes");
-//                            int price = itemAtt.getInt("priceOfParking");
-                            Log.d("httt","parameters " + itemId + " lat " + lat + " lng " + lng);
                             myMarker = mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(lat,lng))
                                     .title("parking"));
                             myMarker.setTag(itemId);
-//                            myMarker.setTitle(price+"");
                             markerList.add(myMarker);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -841,7 +727,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d("stas10", "response error " + error.getMessage());
+                    Log.d("response", "response error " + error.getMessage());
                     try {
                         byte[] htmlBodyBytes = error.networkResponse.data;
                         Log.e("stasptt", new String(htmlBodyBytes), error);
@@ -852,22 +738,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }) {
                 @Override
                 protected Map<String,String> getParams(){
-                    Log.d("stas10","getting params");
                     Map<String,String> params = new HashMap<String,String>();
-
-                    Log.d("stas10","returned params");
                     return params;
                 }
                 @Override
                 public Map<String,String> getHeaders() throws AuthFailureError {
                     Map<String,String> params = new HashMap<String,String>();
-
                     params.put("Content-Type","application/json; charset=utf-8");
                     return params;
                 }
             };
             Volley.newRequestQueue(this).add(customJsonRequest);
-
         }catch (Exception e){
             e.printStackTrace();
         }

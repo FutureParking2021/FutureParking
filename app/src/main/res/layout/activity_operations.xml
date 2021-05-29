@@ -28,21 +28,11 @@
     />
 
     <Button
-        android:id="@+id/operations_BTN_aSync"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_below="@id/operations_BTN_exit"
-        android:text="A-synchronous op"
-        android:tag="aSync"
-        android:layout_marginTop="10dp"
-    />
-    <Button
         android:id="@+id/operations_BTN_deleteUsers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_below="@id/operations_BTN_aSync"
+        android:layout_below="@id/operations_BTN_exit"
         android:layout_marginTop="10dp"
         android:text="Delete All Users"
         android:tag="deleteUsers"
@@ -67,6 +57,29 @@
         android:text="Delete All Operations"
         android:layout_marginTop="10dp"
         android:tag="deleteOperations"
+    />
+
+    <Button
+        android:id="@+id/operations_BTN_exportUsers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/operations_BTN_deleteOperations"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="8dp"
+        android:tag="exportUsers"
+        android:text="Export Users"
+        android:layout_centerHorizontal="true"
+        />
+
+    <Button
+        android:id="@+id/operations_BTN_exportOperations"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/operations_BTN_exportUsers"
+        android:text="exportOperations"
+        android:layout_marginTop="10dp"
+        android:tag="exportOperations"
     />
 
 
