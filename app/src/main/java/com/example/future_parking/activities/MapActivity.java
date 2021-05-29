@@ -274,7 +274,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         builder.setItems(choose,new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                role = choose[which];
+//                role = choose[which];
                 map_MAP_sort.setText(choose[which]);
             }
         });
@@ -471,11 +471,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        Log.d("gttt","marker clicked");
         double dist = distanceBykm(marker.getPosition().latitude, marker.getPosition().longitude,location.latitude,location.longitude);
         BigDecimal bd = BigDecimal.valueOf(dist);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         map_LBL_distance.setText(bd.doubleValue() + " km");
-        getSpecificItem(marker.getTag().toString());
+        String[] tag = marker.getTag().toString().split(",");
+        getSpecificItem(tag[0]);
         return false;
     }
 
@@ -490,6 +492,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         if(role.equals("PLAYER")){
                             searchParkingSpace(parkId,dialog);
                         }else{
+                            Log.d("httt","role " + role);
                             Toast.makeText(MapActivity.this,"Only PLAYER can enter parking",Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
@@ -509,12 +512,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void getSpecificItem(String ParkId) {
+        Log.d("gttt","get item");
         RequestQueue requestQueue = Volley.newRequestQueue(MapActivity.this);
         String url = "http://192.168.1.211:8010/twins/items/2021b.stanislav.krot/" + email + "/2021b.stanislav.krot/" + ParkId ;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject >() {
             @Override
             public void onResponse(JSONObject response) {
                 try{
+
                     // Loop through the array elements
                     for(int i=0;i<response.length();i++){
                         JSONObject jsonItemAtt = response.getJSONObject("itemAttributes");
@@ -522,6 +527,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         pricePark = jsonItemAtt.getInt("priceOfParking");
                         JSONObject itemId = response.getJSONObject("itemId");
                         String id = itemId.getString("id");
+                        Log.d("gttt","before alert dialog");
                         showAlertDialog(parkName,pricePark,id);
                     }
                 }catch (JSONException e){
@@ -531,7 +537,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.d("gttt","error " + error.getMessage());
+                try {
+                    byte[] htmlBodyBytes = error.networkResponse.data;
+                    Log.e("stasptt", new String(htmlBodyBytes), error);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
         });
         requestQueue.add(jsonObjectRequest);

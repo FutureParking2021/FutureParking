@@ -130,11 +130,14 @@ public class OperationsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("httt", "response " + response.toString());
+                        Toast.makeText(OperationsActivity.this, "All " + delete + " were Deleted", Toast.LENGTH_SHORT).show();
+
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(OperationsActivity.this, "All " + delete + " were Deleted", Toast.LENGTH_SHORT).show();
                     }
                 }) {
             @Override
@@ -156,7 +159,7 @@ public class OperationsActivity extends AppCompatActivity {
     }
 
     private void exitRequest() {
-        String url = "http://192.168.1.211:8010/twins/operations?page=0&size=1";
+        String url = "http://192.168.1.211:8010/twins/operations";
         JSONObject js = new JSONObject();
         JSONObject jsItem = new JSONObject();
         JSONObject jsItemId = new JSONObject();

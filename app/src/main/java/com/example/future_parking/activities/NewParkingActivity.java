@@ -151,13 +151,13 @@ public class NewParkingActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("response", "response: " + response.toString());
-                        Toast.makeText(NewParkingActivity.this,"Park created successfully",Toast.LENGTH_SHORT);
+                        Toast.makeText(NewParkingActivity.this,"Park created successfully",Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(NewParkingActivity.this,"Unable to create parking lot",Toast.LENGTH_SHORT);
+                Toast.makeText(NewParkingActivity.this,"Unable to create parking lot",Toast.LENGTH_SHORT).show();
                 Log.d("response", "Error: " + error.getMessage());
                 try {
                     byte[] htmlBodyBytes = error.networkResponse.data;
