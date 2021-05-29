@@ -37,7 +37,7 @@ public class StartUpActivity extends AppCompatActivity {
     private ImageView Start_IMG_operations;
     private ImageView Start_IMG_updateParking;
     private ImageView Start_IMG_newPark;
-
+    private String name;
     private String role;
     private String email;
     private String username;
@@ -68,6 +68,7 @@ public class StartUpActivity extends AppCompatActivity {
         role = getIntent().getStringExtra("ROLE");
         username = getIntent().getStringExtra("USERNAME");
         avatar = getIntent().getStringExtra("AVATAR");
+        name = getIntent().getStringExtra("NAME");
         checkPermissions();
     }
 
@@ -179,8 +180,11 @@ public class StartUpActivity extends AppCompatActivity {
 
     private void updateActivity() {
         Intent intent = new Intent(getApplicationContext(), UpdateItemActivity.class);
-        this.startActivity(intent);
+
         intent.putExtra("EMAIL", email);
+        intent.putExtra("NAME",name);
+        intent.putExtra("ROLE",role);
+        this.startActivity(intent);
     }
 
     private void makeParkingActivity() {

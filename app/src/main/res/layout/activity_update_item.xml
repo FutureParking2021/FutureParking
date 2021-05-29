@@ -17,22 +17,14 @@
         android:textSize="40sp"
         />
 
-    <EditText
-        android:id="@+id/UpdateItem_EDT_type"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Parking Type"
-        android:layout_marginTop="25dp"
-        android:layout_below="@id/UpdateItem_LBL_title"
-        android:tag="type"
         />
     <EditText
         android:id="@+id/UpdateItem_EDT_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Parking name"
-        android:layout_marginTop="25dp"
-        android:layout_below="@id/UpdateItem_EDT_type"
+        android:layout_marginTop="45dp"
+        android:layout_below="@id/UpdateItem_LBL_title"
         android:tag="name"
         />
     <EditText
@@ -46,13 +38,13 @@
 
         />
     <EditText
-        android:id="@+id/UpdateItem_EDT_Location"
+        android:id="@+id/UpdateItem_EDT_Price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Parking Location"
+        android:hint="Parking Price"
         android:layout_marginTop="25dp"
         android:layout_below="@id/UpdateItem_EDT_active"
-        android:tag="location"
+        android:tag="price"
         />
     <EditText
         android:id="@+id/UpdateItem_EDT_parkNum"
@@ -60,7 +52,7 @@
         android:layout_height="wrap_content"
         android:hint="number of park lots"
         android:layout_marginTop="25dp"
-        android:layout_below="@id/UpdateItem_EDT_Location"
+        android:layout_below="@id/UpdateItem_EDT_Price"
         android:tag="location"
         />
 
@@ -73,6 +65,29 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:tag="add"
+        />
+    <TextView
+        android:id="@+id/UpdateItem_LBL_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text=""
+
+        />
+    <TextView
+        android:id="@+id/UpdateItem_LBL_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text=""
+
+        />
+    <TextView
+        android:id="@+id/UpdateItem_LBL_park"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text=""
         />
 
 </RelativeLayout>

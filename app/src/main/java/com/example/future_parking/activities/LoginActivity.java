@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("ptt","role is " + c.getRole());
                         intent.putExtra("AVATAR", c.getAvatar());
                         intent.putExtra("USERNAME", c.getUsername());
-
+                        intent.putExtra("NAME",c.getUsername());
                         onLoginSuccess(c, intent);
                     }
                 }catch (JSONException e){
