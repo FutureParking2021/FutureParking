@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -32,6 +33,11 @@ public class StartUpActivity extends AppCompatActivity {
     private MaterialButton start_BTN_makePark;
     private MaterialButton start_BTN_updatePark;
     private MaterialButton start_BTN_operations;
+    private ImageView Start_IMG_park;
+    private ImageView Start_IMG_operations;
+    private ImageView Start_IMG_updateParking;
+    private ImageView Start_IMG_newPark;
+
     private String role;
     private String email;
     private String username;
@@ -69,28 +75,49 @@ public class StartUpActivity extends AppCompatActivity {
         if(role.equals("PLAYER")){
             start_BTN_park.setVisibility(View.VISIBLE);
             start_BTN_park.setClickable(true);
+            Start_IMG_park.setVisibility(View.VISIBLE);
+
             start_BTN_operations.setVisibility(View.VISIBLE);
             start_BTN_operations.setClickable(true);
+            Start_IMG_operations.setVisibility(View.VISIBLE);
+
             start_BTN_makePark.setVisibility(View.INVISIBLE);
             start_BTN_makePark.setClickable(false);
+            Start_IMG_newPark.setVisibility(View.INVISIBLE);
+
             start_BTN_updatePark.setVisibility(View.INVISIBLE);
             start_BTN_updatePark.setClickable(false);
+            Start_IMG_updateParking.setVisibility(View.INVISIBLE);
+
         } else if(role.equals("MANAGER")){
             start_BTN_makePark.setVisibility(View.VISIBLE);
             start_BTN_makePark.setClickable(true);
+            Start_IMG_newPark.setVisibility(View.VISIBLE);
+
             start_BTN_updatePark.setVisibility(View.VISIBLE);
             start_BTN_updatePark.setClickable(true);
+            Start_IMG_updateParking.setVisibility(View.VISIBLE);
+
             start_BTN_park.setVisibility(View.INVISIBLE);
             start_BTN_park.setClickable(false);
+            Start_IMG_park.setVisibility(View.INVISIBLE);
+
             start_BTN_operations.setVisibility(View.INVISIBLE);
             start_BTN_operations.setClickable(false);
+            Start_IMG_operations.setVisibility(View.INVISIBLE);
+
         } else if (role.equals("ADMIN")){
             start_BTN_park.setVisibility(View.INVISIBLE);
             start_BTN_park.setClickable(false);
+            Start_IMG_park.setVisibility(View.INVISIBLE);
+
             start_BTN_makePark.setVisibility(View.INVISIBLE);
             start_BTN_makePark.setClickable(false);
+            Start_IMG_newPark.setVisibility(View.INVISIBLE);
+
             start_BTN_updatePark.setVisibility(View.INVISIBLE);
             start_BTN_updatePark.setClickable(false);
+            Start_IMG_updateParking.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -177,5 +204,10 @@ public class StartUpActivity extends AppCompatActivity {
         start_BTN_operations = findViewById(R.id.Start_BTN_operations);
         start_BTN_settings = findViewById(R.id.Start_BTN_settings);
         start_BTN_logout = findViewById(R.id.Start_BTN_logout);
+        Start_IMG_park = findViewById(R.id.Start_IMG_park);
+        Start_IMG_operations = findViewById(R.id.Start_IMG_operations);
+        Start_IMG_updateParking = findViewById(R.id.Start_IMG_updateParking);
+        Start_IMG_newPark = findViewById(R.id.Start_IMG_newPark);
+
     }
 }

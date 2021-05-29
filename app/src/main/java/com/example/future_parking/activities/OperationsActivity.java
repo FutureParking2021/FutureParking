@@ -55,25 +55,45 @@ public class OperationsActivity extends AppCompatActivity {
         if(role.equals("ADMIN")){
             operations_BTN_deleteOperations.setVisibility(View.VISIBLE);
             operations_BTN_deleteOperations.setClickable(true);
+
             operations_BTN_deleteItems.setVisibility(View.VISIBLE);
             operations_BTN_deleteItems.setClickable(true);
+
             operations_BTN_deleteUsers.setVisibility(View.VISIBLE);
             operations_BTN_deleteUsers.setClickable(true);
+
             operations_BTN_exportUsers.setVisibility(View.VISIBLE);
             operations_BTN_exportUsers.setClickable(true);
+
             operations_BTN_exportOperations.setVisibility(View.VISIBLE);
             operations_BTN_exportOperations.setClickable(true);
+
             operations_BTN_exit.setVisibility(View.INVISIBLE);
             operations_BTN_exit.setClickable(false);
+
+            operations_BTN_exportUsers.setVisibility(View.VISIBLE);
+            operations_BTN_exportUsers.setClickable(true);
+
+            operations_BTN_exportOperations.setVisibility(View.VISIBLE);
+            operations_BTN_exportOperations.setClickable(true);
         }else if(role.equals("PLAYER")){
             operations_BTN_deleteOperations.setVisibility(View.INVISIBLE);
             operations_BTN_deleteOperations.setClickable(false);
+
             operations_BTN_deleteItems.setVisibility(View.INVISIBLE);
             operations_BTN_deleteItems.setClickable(false);
+
             operations_BTN_deleteUsers.setVisibility(View.INVISIBLE);
             operations_BTN_deleteUsers.setClickable(false);
+
             operations_BTN_exit.setVisibility(View.VISIBLE);
             operations_BTN_exit.setClickable(true);
+
+            operations_BTN_exportUsers.setVisibility(View.INVISIBLE);
+            operations_BTN_exportUsers.setClickable(false);
+
+            operations_BTN_exportOperations.setVisibility(View.INVISIBLE);
+            operations_BTN_exportOperations.setClickable(false);
         }
     }
 
